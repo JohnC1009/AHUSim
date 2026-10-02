@@ -1,6 +1,8 @@
 # 0001 — M0 schema scope and setup choices
 
-Status: proposed (awaiting owner approval at the M0 gate)
+Status: accepted by owner 2026-10-02 (option 1: schema covers §6.1 now;
+each component's model is added in the M1 ticket that builds its physics,
+with the owner approving its fields)
 
 - `schema.py` models only what the §6.1 example uses: component types
   `mixing_box`, `cooling_coil_chw` (mode `design` only), `energy_wheel`;
