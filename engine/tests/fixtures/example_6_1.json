@@ -1,0 +1,44 @@
+{
+  "schema_version": "0.2",
+  "unit": {"name": "AHU-1", "altitude": {"value": 33, "unit": "ft"}, "pressure_override": null},
+  "airflows": {
+    "supply": {"value": 10000, "unit": "cfm", "at": "supply_fan_discharge"},
+    "min_oa": {"value": 3000, "unit": "cfm", "at": "oa_damper"},
+    "pressurization_bias": {"value": 200, "unit": "cfm", "sign": "supply_minus_return"}
+  },
+  "lanes": {
+    "supply": ["oa", "erw1.supply", "mix1", "flt1", "phc1", "cc1", "rhc1", "sf1"],
+    "return": ["ra", "rf1", "mix1", "erw1.exhaust", "ef1"]
+  },
+  "components": {
+    "mix1": {"type": "mixing_box",
+      "dampers": {"oa": {"free_area": {"value": 8.0, "unit": "ft2"}, "max_velocity": {"value": 1500, "unit": "fpm"}},
+                  "ra": {"free_area": {"value": 4.5, "unit": "ft2"}, "max_velocity": {"value": 1500, "unit": "fpm"}},
+                  "relief": {"free_area": {"value": 6.0, "unit": "ft2"}, "max_velocity": {"value": 1500, "unit": "fpm"}}}},
+    "cc1": {"type": "cooling_coil_chw", "mode": "design", "face_area": {"value": 22, "unit": "ft2"},
+      "rating": {"eat_db": {"value": 80.5, "unit": "F"}, "eat_wb": {"value": 67.0, "unit": "F"},
+                 "lat_db": {"value": 55.0, "unit": "F"}, "lat_wb": {"value": 54.0, "unit": "F"},
+                 "airflow": {"value": 10000, "unit": "cfm"},
+                 "chws": {"value": 44, "unit": "F"}, "chwr": {"value": 56, "unit": "F"}}},
+    "erw1": {"type": "energy_wheel", "eps_sens": 0.75, "eps_lat": 0.65, "purge": true, "eatr": 0.02}
+  },
+  "sensors": [
+    {"id": "SAT", "type": "temperature", "at": "after:sf1"},
+    {"id": "MAT", "type": "temperature_averaging", "at": "after:mix1"}
+  ],
+  "sequence": {
+    "modes": [
+      {"id": "warmup", "priority": 2,
+       "enter": {"all": [{"var": "schedule", "op": "==", "value": "pre_occupancy"},
+                         {"var": "space_t", "op": "<", "value": {"value": 68, "unit": "F"}}]},
+       "fixed": {"mix1.oa_fraction": 0.0, "cc1.valve": 0.0},
+       "loops": ["sat_heating"]}
+    ],
+    "loops": {
+      "sat_heating": {"sensor": "SAT", "setpoint": {"value": 90, "unit": "F"},
+                      "stages": [{"actuator": "phc1.valve", "action": "direct"}]}
+    }
+  },
+  "conditions": {"weather_file": "USA_NY_New.York-Central.Park.epw",
+                 "scenarios": ["summer_design", "winter_design"]}
+}
