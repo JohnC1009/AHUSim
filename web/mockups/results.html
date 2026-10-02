@@ -1,0 +1,339 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Results — AHU-1 (mockup)</title>
+<link rel="stylesheet" href="assets/tokens.css">
+<link rel="stylesheet" href="mockup.css">
+</head>
+<body>
+<script src="assets/symbols.js"></script>
+<div class="mock-banner">Mockup M0-4 · Results (spec §5.9). Values are illustrative, not engine output.</div>
+
+<header class="topbar">
+  <div class="crumbs"><span class="muted small">Hospital Wing B</span><span class="sep">/</span><h1>AHU-1</h1></div>
+  <nav class="tabs">
+    <a href="unit.html">Unit</a>
+    <a href="sequence.html">Sequence</a>
+    <a href="#">Conditions</a>
+    <a href="results.html" aria-current="page">Results</a>
+    <a href="export.html">Export</a>
+  </nav>
+  <div class="spacer"></div>
+  <span class="small muted">Run 14 · engine 0.1.0 · 2026-10-02 09:41</span>
+  <div class="segmented" role="group" aria-label="Unit system"><span aria-pressed="true">I-P</span><span>SI</span></div>
+</header>
+
+<div class="page">
+  <aside class="panel stack">
+    <h3>Run type</h3>
+    <ul class="list">
+      <li>Scenario</li>
+      <li>Sweep</li>
+      <li aria-selected="true">Annual + sweep (this view)</li>
+    </ul>
+    <h3>Summary</h3>
+    <div class="stack tight">
+      <span class="status pass"><svg class="icon"><use href="#status-pass"/></svg>8,466 h pass</span>
+      <span class="status fail"><svg class="icon"><use href="#status-fail"/></svg>294 h fail</span>
+      <span class="status warning"><svg class="icon"><use href="#status-warning"/></svg>1 static warning</span>
+    </div>
+    <p class="hint">Weather: USA_NY_New.York-Central.Park.epw · 8,760 rows</p>
+  </aside>
+
+  <main class="main">
+    <div class="stack">
+      <div class="card stack">
+        <h2>Scenarios</h2>
+        <table>
+          <thead><tr><th>Condition</th><th class="n">OA db <span class="u">(°F)</span></th><th class="n">OA wb <span class="u">(°F)</span></th><th>Mode</th><th>Result</th><th>First failure</th></tr></thead>
+          <tbody>
+            <tr><td>summer_design</td><td class="n">91.0</td><td class="n">74.0</td><td>occupied_cooling</td><td><span class="status pass"><svg class="icon"><use href="#status-pass"/></svg>Pass</span></td><td class="muted">—</td></tr>
+            <tr><td>summer_0.4%_wb</td><td class="n">86.0</td><td class="n">77.5</td><td>occupied_cooling</td><td><span class="status fail"><svg class="icon"><use href="#status-fail"/></svg>Fail</span></td><td>SAT 57.1 °F vs 55.0 °F, cc1.valve at 100 %</td></tr>
+            <tr><td>winter_design</td><td class="n">13.0</td><td class="n">11.3</td><td>occupied_heating</td><td><span class="status fail"><svg class="icon"><use href="#status-fail"/></svg>Fail</span></td><td>erw1 exhaust leaving 28.4 °F and saturated: frost</td></tr>
+            <tr><td>winter_design</td><td class="n">13.0</td><td class="n">11.3</td><td>warmup</td><td><span class="status fail"><svg class="icon"><use href="#status-fail"/></svg>Fail</span></td><td>mix1.ra face velocity 2,222 fpm vs 1,500 fpm</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="card stack">
+        <div class="row"><h2>Sweep · OA dry bulb × OA RH</h2><div class="spacer"></div><span class="small muted">mode occupied_cooling · 20 × 10 points</span></div>
+        <svg class="sweep" viewBox="0 0 640 300" role="img" aria-label="Sweep result grid">
+<text class="axis" x="56" y="32.0" text-anchor="end">100</text>
+<use href="#marker-limit_exceeded" class="cell-fail" x="69" y="20" width="16" height="16"><title>40 °F, 100 % RH: limit exceeded</title></use>
+<use href="#marker-limit_exceeded" class="cell-fail" x="95" y="20" width="16" height="16"><title>44 °F, 100 % RH: limit exceeded</title></use>
+<use href="#marker-pass" class="cell-pass" x="121" y="20" width="16" height="16"><title>48 °F, 100 % RH: pass</title></use>
+<use href="#marker-pass" class="cell-pass" x="147" y="20" width="16" height="16"><title>52 °F, 100 % RH: pass</title></use>
+<use href="#marker-pass" class="cell-pass" x="173" y="20" width="16" height="16"><title>56 °F, 100 % RH: pass</title></use>
+<use href="#marker-fighting" class="cell-fail" x="199" y="20" width="16" height="16"><title>60 °F, 100 % RH: fighting</title></use>
+<use href="#marker-fighting" class="cell-fail" x="225" y="20" width="16" height="16"><title>64 °F, 100 % RH: fighting</title></use>
+<use href="#marker-pass" class="cell-pass" x="251" y="20" width="16" height="16"><title>68 °F, 100 % RH: pass</title></use>
+<use href="#marker-pass" class="cell-pass" x="277" y="20" width="16" height="16"><title>72 °F, 100 % RH: pass</title></use>
+<use href="#marker-pass" class="cell-pass" x="303" y="20" width="16" height="16"><title>76 °F, 100 % RH: pass</title></use>
+<use href="#marker-setpoint_not_met" class="cell-fail" x="329" y="20" width="16" height="16"><title>80 °F, 100 % RH: setpoint not met</title></use>
+<use href="#marker-setpoint_not_met" class="cell-fail" x="355" y="20" width="16" height="16"><title>84 °F, 100 % RH: setpoint not met</title></use>
+<use href="#marker-setpoint_not_met" class="cell-fail" x="381" y="20" width="16" height="16"><title>88 °F, 100 % RH: setpoint not met</title></use>
+<use href="#marker-setpoint_not_met" class="cell-fail" x="407" y="20" width="16" height="16"><title>92 °F, 100 % RH: setpoint not met</title></use>
+<use href="#marker-setpoint_not_met" class="cell-fail" x="433" y="20" width="16" height="16"><title>96 °F, 100 % RH: setpoint not met</title></use>
+<use href="#marker-setpoint_not_met" class="cell-fail" x="459" y="20" width="16" height="16"><title>100 °F, 100 % RH: setpoint not met</title></use>
+<use href="#marker-setpoint_not_met" class="cell-fail" x="485" y="20" width="16" height="16"><title>104 °F, 100 % RH: setpoint not met</title></use>
+<use href="#marker-setpoint_not_met" class="cell-fail" x="511" y="20" width="16" height="16"><title>108 °F, 100 % RH: setpoint not met</title></use>
+<use href="#marker-setpoint_not_met" class="cell-fail" x="537" y="20" width="16" height="16"><title>112 °F, 100 % RH: setpoint not met</title></use>
+<use href="#marker-setpoint_not_met" class="cell-fail" x="563" y="20" width="16" height="16"><title>116 °F, 100 % RH: setpoint not met</title></use>
+<text class="axis" x="56" y="56.0" text-anchor="end">90</text>
+<use href="#marker-limit_exceeded" class="cell-fail" x="69" y="44" width="16" height="16"><title>40 °F, 90 % RH: limit exceeded</title></use>
+<use href="#marker-limit_exceeded" class="cell-fail" x="95" y="44" width="16" height="16"><title>44 °F, 90 % RH: limit exceeded</title></use>
+<use href="#marker-pass" class="cell-pass" x="121" y="44" width="16" height="16"><title>48 °F, 90 % RH: pass</title></use>
+<use href="#marker-pass" class="cell-pass" x="147" y="44" width="16" height="16"><title>52 °F, 90 % RH: pass</title></use>
+<use href="#marker-pass" class="cell-pass" x="173" y="44" width="16" height="16"><title>56 °F, 90 % RH: pass</title></use>
+<use href="#marker-fighting" class="cell-fail" x="199" y="44" width="16" height="16"><title>60 °F, 90 % RH: fighting</title></use>
+<use href="#marker-fighting" class="cell-fail" x="225" y="44" width="16" height="16"><title>64 °F, 90 % RH: fighting</title></use>
+<use href="#marker-pass" class="cell-pass" x="251" y="44" width="16" height="16"><title>68 °F, 90 % RH: pass</title></use>
+<use href="#marker-pass" class="cell-pass" x="277" y="44" width="16" height="16"><title>72 °F, 90 % RH: pass</title></use>
+<use href="#marker-pass" class="cell-pass" x="303" y="44" width="16" height="16"><title>76 °F, 90 % RH: pass</title></use>
+<use href="#marker-pass" class="cell-pass" x="329" y="44" width="16" height="16"><title>80 °F, 90 % RH: pass</title></use>
+<use href="#marker-setpoint_not_met" class="cell-fail" x="355" y="44" width="16" height="16"><title>84 °F, 90 % RH: setpoint not met</title></use>
+<use href="#marker-setpoint_not_met" class="cell-fail" x="381" y="44" width="16" height="16"><title>88 °F, 90 % RH: setpoint not met</title></use>
+<use href="#marker-setpoint_not_met" class="cell-fail" x="407" y="44" width="16" height="16"><title>92 °F, 90 % RH: setpoint not met</title></use>
+<use href="#marker-setpoint_not_met" class="cell-fail" x="433" y="44" width="16" height="16"><title>96 °F, 90 % RH: setpoint not met</title></use>
+<use href="#marker-setpoint_not_met" class="cell-fail" x="459" y="44" width="16" height="16"><title>100 °F, 90 % RH: setpoint not met</title></use>
+<use href="#marker-setpoint_not_met" class="cell-fail" x="485" y="44" width="16" height="16"><title>104 °F, 90 % RH: setpoint not met</title></use>
+<use href="#marker-setpoint_not_met" class="cell-fail" x="511" y="44" width="16" height="16"><title>108 °F, 90 % RH: setpoint not met</title></use>
+<use href="#marker-setpoint_not_met" class="cell-fail" x="537" y="44" width="16" height="16"><title>112 °F, 90 % RH: setpoint not met</title></use>
+<use href="#marker-setpoint_not_met" class="cell-fail" x="563" y="44" width="16" height="16"><title>116 °F, 90 % RH: setpoint not met</title></use>
+<text class="axis" x="56" y="80.0" text-anchor="end">80</text>
+<use href="#marker-limit_exceeded" class="cell-fail" x="69" y="68" width="16" height="16"><title>40 °F, 80 % RH: limit exceeded</title></use>
+<use href="#marker-limit_exceeded" class="cell-fail" x="95" y="68" width="16" height="16"><title>44 °F, 80 % RH: limit exceeded</title></use>
+<use href="#marker-pass" class="cell-pass" x="121" y="68" width="16" height="16"><title>48 °F, 80 % RH: pass</title></use>
+<use href="#marker-pass" class="cell-pass" x="147" y="68" width="16" height="16"><title>52 °F, 80 % RH: pass</title></use>
+<use href="#marker-pass" class="cell-pass" x="173" y="68" width="16" height="16"><title>56 °F, 80 % RH: pass</title></use>
+<use href="#marker-fighting" class="cell-fail" x="199" y="68" width="16" height="16"><title>60 °F, 80 % RH: fighting</title></use>
+<use href="#marker-fighting" class="cell-fail" x="225" y="68" width="16" height="16"><title>64 °F, 80 % RH: fighting</title></use>
+<use href="#marker-pass" class="cell-pass" x="251" y="68" width="16" height="16"><title>68 °F, 80 % RH: pass</title></use>
+<use href="#marker-pass" class="cell-pass" x="277" y="68" width="16" height="16"><title>72 °F, 80 % RH: pass</title></use>
+<use href="#marker-pass" class="cell-pass" x="303" y="68" width="16" height="16"><title>76 °F, 80 % RH: pass</title></use>
+<use href="#marker-pass" class="cell-pass" x="329" y="68" width="16" height="16"><title>80 °F, 80 % RH: pass</title></use>
+<use href="#marker-setpoint_not_met" class="cell-fail" x="355" y="68" width="16" height="16"><title>84 °F, 80 % RH: setpoint not met</title></use>
+<use href="#marker-setpoint_not_met" class="cell-fail" x="381" y="68" width="16" height="16"><title>88 °F, 80 % RH: setpoint not met</title></use>
+<use href="#marker-setpoint_not_met" class="cell-fail" x="407" y="68" width="16" height="16"><title>92 °F, 80 % RH: setpoint not met</title></use>
+<use href="#marker-setpoint_not_met" class="cell-fail" x="433" y="68" width="16" height="16"><title>96 °F, 80 % RH: setpoint not met</title></use>
+<use href="#marker-setpoint_not_met" class="cell-fail" x="459" y="68" width="16" height="16"><title>100 °F, 80 % RH: setpoint not met</title></use>
+<use href="#marker-setpoint_not_met" class="cell-fail" x="485" y="68" width="16" height="16"><title>104 °F, 80 % RH: setpoint not met</title></use>
+<use href="#marker-setpoint_not_met" class="cell-fail" x="511" y="68" width="16" height="16"><title>108 °F, 80 % RH: setpoint not met</title></use>
+<use href="#marker-setpoint_not_met" class="cell-fail" x="537" y="68" width="16" height="16"><title>112 °F, 80 % RH: setpoint not met</title></use>
+<use href="#marker-setpoint_not_met" class="cell-fail" x="563" y="68" width="16" height="16"><title>116 °F, 80 % RH: setpoint not met</title></use>
+<text class="axis" x="56" y="104.0" text-anchor="end">70</text>
+<use href="#marker-limit_exceeded" class="cell-fail" x="69" y="92" width="16" height="16"><title>40 °F, 70 % RH: limit exceeded</title></use>
+<use href="#marker-limit_exceeded" class="cell-fail" x="95" y="92" width="16" height="16"><title>44 °F, 70 % RH: limit exceeded</title></use>
+<use href="#marker-pass" class="cell-pass" x="121" y="92" width="16" height="16"><title>48 °F, 70 % RH: pass</title></use>
+<use href="#marker-pass" class="cell-pass" x="147" y="92" width="16" height="16"><title>52 °F, 70 % RH: pass</title></use>
+<use href="#marker-pass" class="cell-pass" x="173" y="92" width="16" height="16"><title>56 °F, 70 % RH: pass</title></use>
+<use href="#marker-pass" class="cell-pass" x="199" y="92" width="16" height="16"><title>60 °F, 70 % RH: pass</title></use>
+<use href="#marker-pass" class="cell-pass" x="225" y="92" width="16" height="16"><title>64 °F, 70 % RH: pass</title></use>
+<use href="#marker-pass" class="cell-pass" x="251" y="92" width="16" height="16"><title>68 °F, 70 % RH: pass</title></use>
+<use href="#marker-pass" class="cell-pass" x="277" y="92" width="16" height="16"><title>72 °F, 70 % RH: pass</title></use>
+<use href="#marker-pass" class="cell-pass" x="303" y="92" width="16" height="16"><title>76 °F, 70 % RH: pass</title></use>
+<use href="#marker-pass" class="cell-pass" x="329" y="92" width="16" height="16"><title>80 °F, 70 % RH: pass</title></use>
+<use href="#marker-pass" class="cell-pass" x="355" y="92" width="16" height="16"><title>84 °F, 70 % RH: pass</title></use>
+<use href="#marker-setpoint_not_met" class="cell-fail" x="381" y="92" width="16" height="16"><title>88 °F, 70 % RH: setpoint not met</title></use>
+<use href="#marker-setpoint_not_met" class="cell-fail" x="407" y="92" width="16" height="16"><title>92 °F, 70 % RH: setpoint not met</title></use>
+<use href="#marker-setpoint_not_met" class="cell-fail" x="433" y="92" width="16" height="16"><title>96 °F, 70 % RH: setpoint not met</title></use>
+<use href="#marker-setpoint_not_met" class="cell-fail" x="459" y="92" width="16" height="16"><title>100 °F, 70 % RH: setpoint not met</title></use>
+<use href="#marker-setpoint_not_met" class="cell-fail" x="485" y="92" width="16" height="16"><title>104 °F, 70 % RH: setpoint not met</title></use>
+<use href="#marker-setpoint_not_met" class="cell-fail" x="511" y="92" width="16" height="16"><title>108 °F, 70 % RH: setpoint not met</title></use>
+<use href="#marker-setpoint_not_met" class="cell-fail" x="537" y="92" width="16" height="16"><title>112 °F, 70 % RH: setpoint not met</title></use>
+<use href="#marker-setpoint_not_met" class="cell-fail" x="563" y="92" width="16" height="16"><title>116 °F, 70 % RH: setpoint not met</title></use>
+<text class="axis" x="56" y="128.0" text-anchor="end">60</text>
+<use href="#marker-limit_exceeded" class="cell-fail" x="69" y="116" width="16" height="16"><title>40 °F, 60 % RH: limit exceeded</title></use>
+<use href="#marker-limit_exceeded" class="cell-fail" x="95" y="116" width="16" height="16"><title>44 °F, 60 % RH: limit exceeded</title></use>
+<use href="#marker-pass" class="cell-pass" x="121" y="116" width="16" height="16"><title>48 °F, 60 % RH: pass</title></use>
+<use href="#marker-pass" class="cell-pass" x="147" y="116" width="16" height="16"><title>52 °F, 60 % RH: pass</title></use>
+<use href="#marker-pass" class="cell-pass" x="173" y="116" width="16" height="16"><title>56 °F, 60 % RH: pass</title></use>
+<use href="#marker-pass" class="cell-pass" x="199" y="116" width="16" height="16"><title>60 °F, 60 % RH: pass</title></use>
+<use href="#marker-pass" class="cell-pass" x="225" y="116" width="16" height="16"><title>64 °F, 60 % RH: pass</title></use>
+<use href="#marker-pass" class="cell-pass" x="251" y="116" width="16" height="16"><title>68 °F, 60 % RH: pass</title></use>
+<use href="#marker-pass" class="cell-pass" x="277" y="116" width="16" height="16"><title>72 °F, 60 % RH: pass</title></use>
+<use href="#marker-pass" class="cell-pass" x="303" y="116" width="16" height="16"><title>76 °F, 60 % RH: pass</title></use>
+<use href="#marker-pass" class="cell-pass" x="329" y="116" width="16" height="16"><title>80 °F, 60 % RH: pass</title></use>
+<use href="#marker-pass" class="cell-pass" x="355" y="116" width="16" height="16"><title>84 °F, 60 % RH: pass</title></use>
+<use href="#marker-pass" class="cell-pass" x="381" y="116" width="16" height="16"><title>88 °F, 60 % RH: pass</title></use>
+<use href="#marker-setpoint_not_met" class="cell-fail" x="407" y="116" width="16" height="16"><title>92 °F, 60 % RH: setpoint not met</title></use>
+<use href="#marker-setpoint_not_met" class="cell-fail" x="433" y="116" width="16" height="16"><title>96 °F, 60 % RH: setpoint not met</title></use>
+<use href="#marker-setpoint_not_met" class="cell-fail" x="459" y="116" width="16" height="16"><title>100 °F, 60 % RH: setpoint not met</title></use>
+<use href="#marker-setpoint_not_met" class="cell-fail" x="485" y="116" width="16" height="16"><title>104 °F, 60 % RH: setpoint not met</title></use>
+<use href="#marker-setpoint_not_met" class="cell-fail" x="511" y="116" width="16" height="16"><title>108 °F, 60 % RH: setpoint not met</title></use>
+<use href="#marker-setpoint_not_met" class="cell-fail" x="537" y="116" width="16" height="16"><title>112 °F, 60 % RH: setpoint not met</title></use>
+<use href="#marker-setpoint_not_met" class="cell-fail" x="563" y="116" width="16" height="16"><title>116 °F, 60 % RH: setpoint not met</title></use>
+<text class="axis" x="56" y="152.0" text-anchor="end">50</text>
+<use href="#marker-limit_exceeded" class="cell-fail" x="69" y="140" width="16" height="16"><title>40 °F, 50 % RH: limit exceeded</title></use>
+<use href="#marker-limit_exceeded" class="cell-fail" x="95" y="140" width="16" height="16"><title>44 °F, 50 % RH: limit exceeded</title></use>
+<use href="#marker-pass" class="cell-pass" x="121" y="140" width="16" height="16"><title>48 °F, 50 % RH: pass</title></use>
+<use href="#marker-pass" class="cell-pass" x="147" y="140" width="16" height="16"><title>52 °F, 50 % RH: pass</title></use>
+<use href="#marker-pass" class="cell-pass" x="173" y="140" width="16" height="16"><title>56 °F, 50 % RH: pass</title></use>
+<use href="#marker-pass" class="cell-pass" x="199" y="140" width="16" height="16"><title>60 °F, 50 % RH: pass</title></use>
+<use href="#marker-pass" class="cell-pass" x="225" y="140" width="16" height="16"><title>64 °F, 50 % RH: pass</title></use>
+<use href="#marker-pass" class="cell-pass" x="251" y="140" width="16" height="16"><title>68 °F, 50 % RH: pass</title></use>
+<use href="#marker-pass" class="cell-pass" x="277" y="140" width="16" height="16"><title>72 °F, 50 % RH: pass</title></use>
+<use href="#marker-pass" class="cell-pass" x="303" y="140" width="16" height="16"><title>76 °F, 50 % RH: pass</title></use>
+<use href="#marker-pass" class="cell-pass" x="329" y="140" width="16" height="16"><title>80 °F, 50 % RH: pass</title></use>
+<use href="#marker-pass" class="cell-pass" x="355" y="140" width="16" height="16"><title>84 °F, 50 % RH: pass</title></use>
+<use href="#marker-pass" class="cell-pass" x="381" y="140" width="16" height="16"><title>88 °F, 50 % RH: pass</title></use>
+<use href="#marker-pass" class="cell-pass" x="407" y="140" width="16" height="16"><title>92 °F, 50 % RH: pass</title></use>
+<use href="#marker-setpoint_not_met" class="cell-fail" x="433" y="140" width="16" height="16"><title>96 °F, 50 % RH: setpoint not met</title></use>
+<use href="#marker-setpoint_not_met" class="cell-fail" x="459" y="140" width="16" height="16"><title>100 °F, 50 % RH: setpoint not met</title></use>
+<use href="#marker-setpoint_not_met" class="cell-fail" x="485" y="140" width="16" height="16"><title>104 °F, 50 % RH: setpoint not met</title></use>
+<use href="#marker-setpoint_not_met" class="cell-fail" x="511" y="140" width="16" height="16"><title>108 °F, 50 % RH: setpoint not met</title></use>
+<use href="#marker-setpoint_not_met" class="cell-fail" x="537" y="140" width="16" height="16"><title>112 °F, 50 % RH: setpoint not met</title></use>
+<use href="#marker-setpoint_not_met" class="cell-fail" x="563" y="140" width="16" height="16"><title>116 °F, 50 % RH: setpoint not met</title></use>
+<text class="axis" x="56" y="176.0" text-anchor="end">40</text>
+<use href="#marker-limit_exceeded" class="cell-fail" x="69" y="164" width="16" height="16"><title>40 °F, 40 % RH: limit exceeded</title></use>
+<use href="#marker-limit_exceeded" class="cell-fail" x="95" y="164" width="16" height="16"><title>44 °F, 40 % RH: limit exceeded</title></use>
+<use href="#marker-pass" class="cell-pass" x="121" y="164" width="16" height="16"><title>48 °F, 40 % RH: pass</title></use>
+<use href="#marker-pass" class="cell-pass" x="147" y="164" width="16" height="16"><title>52 °F, 40 % RH: pass</title></use>
+<use href="#marker-pass" class="cell-pass" x="173" y="164" width="16" height="16"><title>56 °F, 40 % RH: pass</title></use>
+<use href="#marker-pass" class="cell-pass" x="199" y="164" width="16" height="16"><title>60 °F, 40 % RH: pass</title></use>
+<use href="#marker-pass" class="cell-pass" x="225" y="164" width="16" height="16"><title>64 °F, 40 % RH: pass</title></use>
+<use href="#marker-pass" class="cell-pass" x="251" y="164" width="16" height="16"><title>68 °F, 40 % RH: pass</title></use>
+<use href="#marker-pass" class="cell-pass" x="277" y="164" width="16" height="16"><title>72 °F, 40 % RH: pass</title></use>
+<use href="#marker-pass" class="cell-pass" x="303" y="164" width="16" height="16"><title>76 °F, 40 % RH: pass</title></use>
+<use href="#marker-pass" class="cell-pass" x="329" y="164" width="16" height="16"><title>80 °F, 40 % RH: pass</title></use>
+<use href="#marker-pass" class="cell-pass" x="355" y="164" width="16" height="16"><title>84 °F, 40 % RH: pass</title></use>
+<use href="#marker-non_converged" class="cell-fail" x="381" y="164" width="16" height="16"><title>88 °F, 40 % RH: non converged</title></use>
+<use href="#marker-pass" class="cell-pass" x="407" y="164" width="16" height="16"><title>92 °F, 40 % RH: pass</title></use>
+<use href="#marker-pass" class="cell-pass" x="433" y="164" width="16" height="16"><title>96 °F, 40 % RH: pass</title></use>
+<use href="#marker-setpoint_not_met" class="cell-fail" x="459" y="164" width="16" height="16"><title>100 °F, 40 % RH: setpoint not met</title></use>
+<use href="#marker-setpoint_not_met" class="cell-fail" x="485" y="164" width="16" height="16"><title>104 °F, 40 % RH: setpoint not met</title></use>
+<use href="#marker-setpoint_not_met" class="cell-fail" x="511" y="164" width="16" height="16"><title>108 °F, 40 % RH: setpoint not met</title></use>
+<use href="#marker-setpoint_not_met" class="cell-fail" x="537" y="164" width="16" height="16"><title>112 °F, 40 % RH: setpoint not met</title></use>
+<use href="#marker-setpoint_not_met" class="cell-fail" x="563" y="164" width="16" height="16"><title>116 °F, 40 % RH: setpoint not met</title></use>
+<text class="axis" x="56" y="200.0" text-anchor="end">30</text>
+<use href="#marker-limit_exceeded" class="cell-fail" x="69" y="188" width="16" height="16"><title>40 °F, 30 % RH: limit exceeded</title></use>
+<use href="#marker-limit_exceeded" class="cell-fail" x="95" y="188" width="16" height="16"><title>44 °F, 30 % RH: limit exceeded</title></use>
+<use href="#marker-pass" class="cell-pass" x="121" y="188" width="16" height="16"><title>48 °F, 30 % RH: pass</title></use>
+<use href="#marker-pass" class="cell-pass" x="147" y="188" width="16" height="16"><title>52 °F, 30 % RH: pass</title></use>
+<use href="#marker-pass" class="cell-pass" x="173" y="188" width="16" height="16"><title>56 °F, 30 % RH: pass</title></use>
+<use href="#marker-pass" class="cell-pass" x="199" y="188" width="16" height="16"><title>60 °F, 30 % RH: pass</title></use>
+<use href="#marker-pass" class="cell-pass" x="225" y="188" width="16" height="16"><title>64 °F, 30 % RH: pass</title></use>
+<use href="#marker-pass" class="cell-pass" x="251" y="188" width="16" height="16"><title>68 °F, 30 % RH: pass</title></use>
+<use href="#marker-pass" class="cell-pass" x="277" y="188" width="16" height="16"><title>72 °F, 30 % RH: pass</title></use>
+<use href="#marker-pass" class="cell-pass" x="303" y="188" width="16" height="16"><title>76 °F, 30 % RH: pass</title></use>
+<use href="#marker-pass" class="cell-pass" x="329" y="188" width="16" height="16"><title>80 °F, 30 % RH: pass</title></use>
+<use href="#marker-pass" class="cell-pass" x="355" y="188" width="16" height="16"><title>84 °F, 30 % RH: pass</title></use>
+<use href="#marker-pass" class="cell-pass" x="381" y="188" width="16" height="16"><title>88 °F, 30 % RH: pass</title></use>
+<use href="#marker-pass" class="cell-pass" x="407" y="188" width="16" height="16"><title>92 °F, 30 % RH: pass</title></use>
+<use href="#marker-pass" class="cell-pass" x="433" y="188" width="16" height="16"><title>96 °F, 30 % RH: pass</title></use>
+<use href="#marker-pass" class="cell-pass" x="459" y="188" width="16" height="16"><title>100 °F, 30 % RH: pass</title></use>
+<use href="#marker-pass" class="cell-pass" x="485" y="188" width="16" height="16"><title>104 °F, 30 % RH: pass</title></use>
+<use href="#marker-setpoint_not_met" class="cell-fail" x="511" y="188" width="16" height="16"><title>108 °F, 30 % RH: setpoint not met</title></use>
+<use href="#marker-setpoint_not_met" class="cell-fail" x="537" y="188" width="16" height="16"><title>112 °F, 30 % RH: setpoint not met</title></use>
+<use href="#marker-setpoint_not_met" class="cell-fail" x="563" y="188" width="16" height="16"><title>116 °F, 30 % RH: setpoint not met</title></use>
+<text class="axis" x="56" y="224.0" text-anchor="end">20</text>
+<use href="#marker-limit_exceeded" class="cell-fail" x="69" y="212" width="16" height="16"><title>40 °F, 20 % RH: limit exceeded</title></use>
+<use href="#marker-limit_exceeded" class="cell-fail" x="95" y="212" width="16" height="16"><title>44 °F, 20 % RH: limit exceeded</title></use>
+<use href="#marker-pass" class="cell-pass" x="121" y="212" width="16" height="16"><title>48 °F, 20 % RH: pass</title></use>
+<use href="#marker-pass" class="cell-pass" x="147" y="212" width="16" height="16"><title>52 °F, 20 % RH: pass</title></use>
+<use href="#marker-pass" class="cell-pass" x="173" y="212" width="16" height="16"><title>56 °F, 20 % RH: pass</title></use>
+<use href="#marker-pass" class="cell-pass" x="199" y="212" width="16" height="16"><title>60 °F, 20 % RH: pass</title></use>
+<use href="#marker-pass" class="cell-pass" x="225" y="212" width="16" height="16"><title>64 °F, 20 % RH: pass</title></use>
+<use href="#marker-pass" class="cell-pass" x="251" y="212" width="16" height="16"><title>68 °F, 20 % RH: pass</title></use>
+<use href="#marker-pass" class="cell-pass" x="277" y="212" width="16" height="16"><title>72 °F, 20 % RH: pass</title></use>
+<use href="#marker-pass" class="cell-pass" x="303" y="212" width="16" height="16"><title>76 °F, 20 % RH: pass</title></use>
+<use href="#marker-pass" class="cell-pass" x="329" y="212" width="16" height="16"><title>80 °F, 20 % RH: pass</title></use>
+<use href="#marker-pass" class="cell-pass" x="355" y="212" width="16" height="16"><title>84 °F, 20 % RH: pass</title></use>
+<use href="#marker-pass" class="cell-pass" x="381" y="212" width="16" height="16"><title>88 °F, 20 % RH: pass</title></use>
+<use href="#marker-pass" class="cell-pass" x="407" y="212" width="16" height="16"><title>92 °F, 20 % RH: pass</title></use>
+<use href="#marker-pass" class="cell-pass" x="433" y="212" width="16" height="16"><title>96 °F, 20 % RH: pass</title></use>
+<use href="#marker-pass" class="cell-pass" x="459" y="212" width="16" height="16"><title>100 °F, 20 % RH: pass</title></use>
+<use href="#marker-pass" class="cell-pass" x="485" y="212" width="16" height="16"><title>104 °F, 20 % RH: pass</title></use>
+<use href="#marker-pass" class="cell-pass" x="511" y="212" width="16" height="16"><title>108 °F, 20 % RH: pass</title></use>
+<use href="#marker-pass" class="cell-pass" x="537" y="212" width="16" height="16"><title>112 °F, 20 % RH: pass</title></use>
+<use href="#marker-setpoint_not_met" class="cell-fail" x="563" y="212" width="16" height="16"><title>116 °F, 20 % RH: setpoint not met</title></use>
+<text class="axis" x="56" y="248.0" text-anchor="end">10</text>
+<use href="#marker-limit_exceeded" class="cell-fail" x="69" y="236" width="16" height="16"><title>40 °F, 10 % RH: limit exceeded</title></use>
+<use href="#marker-limit_exceeded" class="cell-fail" x="95" y="236" width="16" height="16"><title>44 °F, 10 % RH: limit exceeded</title></use>
+<use href="#marker-pass" class="cell-pass" x="121" y="236" width="16" height="16"><title>48 °F, 10 % RH: pass</title></use>
+<use href="#marker-pass" class="cell-pass" x="147" y="236" width="16" height="16"><title>52 °F, 10 % RH: pass</title></use>
+<use href="#marker-pass" class="cell-pass" x="173" y="236" width="16" height="16"><title>56 °F, 10 % RH: pass</title></use>
+<use href="#marker-pass" class="cell-pass" x="199" y="236" width="16" height="16"><title>60 °F, 10 % RH: pass</title></use>
+<use href="#marker-pass" class="cell-pass" x="225" y="236" width="16" height="16"><title>64 °F, 10 % RH: pass</title></use>
+<use href="#marker-pass" class="cell-pass" x="251" y="236" width="16" height="16"><title>68 °F, 10 % RH: pass</title></use>
+<use href="#marker-pass" class="cell-pass" x="277" y="236" width="16" height="16"><title>72 °F, 10 % RH: pass</title></use>
+<use href="#marker-pass" class="cell-pass" x="303" y="236" width="16" height="16"><title>76 °F, 10 % RH: pass</title></use>
+<use href="#marker-pass" class="cell-pass" x="329" y="236" width="16" height="16"><title>80 °F, 10 % RH: pass</title></use>
+<use href="#marker-pass" class="cell-pass" x="355" y="236" width="16" height="16"><title>84 °F, 10 % RH: pass</title></use>
+<use href="#marker-pass" class="cell-pass" x="381" y="236" width="16" height="16"><title>88 °F, 10 % RH: pass</title></use>
+<use href="#marker-pass" class="cell-pass" x="407" y="236" width="16" height="16"><title>92 °F, 10 % RH: pass</title></use>
+<use href="#marker-pass" class="cell-pass" x="433" y="236" width="16" height="16"><title>96 °F, 10 % RH: pass</title></use>
+<use href="#marker-pass" class="cell-pass" x="459" y="236" width="16" height="16"><title>100 °F, 10 % RH: pass</title></use>
+<use href="#marker-pass" class="cell-pass" x="485" y="236" width="16" height="16"><title>104 °F, 10 % RH: pass</title></use>
+<use href="#marker-pass" class="cell-pass" x="511" y="236" width="16" height="16"><title>108 °F, 10 % RH: pass</title></use>
+<use href="#marker-pass" class="cell-pass" x="537" y="236" width="16" height="16"><title>112 °F, 10 % RH: pass</title></use>
+<use href="#marker-pass" class="cell-pass" x="563" y="236" width="16" height="16"><title>116 °F, 10 % RH: pass</title></use>
+<text class="axis" x="77" y="272" text-anchor="middle">40</text>
+<text class="axis" x="129" y="272" text-anchor="middle">48</text>
+<text class="axis" x="181" y="272" text-anchor="middle">56</text>
+<text class="axis" x="233" y="272" text-anchor="middle">64</text>
+<text class="axis" x="285" y="272" text-anchor="middle">72</text>
+<text class="axis" x="337" y="272" text-anchor="middle">80</text>
+<text class="axis" x="389" y="272" text-anchor="middle">88</text>
+<text class="axis" x="441" y="272" text-anchor="middle">96</text>
+<text class="axis" x="493" y="272" text-anchor="middle">104</text>
+<text class="axis" x="545" y="272" text-anchor="middle">112</text>
+<rect class="frame" x="64" y="16" width="520" height="240"/>
+<text class="axis" x="324" y="288" text-anchor="middle">OA dry bulb (°F)</text>
+<text class="axis" x="56" y="12" text-anchor="end">RH (%)</text>
+        </svg>
+        <div class="legend">
+          <span><svg class="icon st-pass"><use href="#marker-pass"/></svg>Pass</span>
+          <span><svg class="icon st-fail"><use href="#marker-setpoint_not_met"/></svg>Setpoint not met</span>
+          <span><svg class="icon st-fail"><use href="#marker-limit_exceeded"/></svg>Limit exceeded</span>
+          <span><svg class="icon st-fail"><use href="#marker-fighting"/></svg>Fighting</span>
+          <span><svg class="icon st-fail"><use href="#marker-non_converged"/></svg>Not converged</span>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card stack">
+          <h2>Hours per mode</h2>
+          <table>
+            <thead><tr><th>Mode</th><th class="n">Hours <span class="u">(h)</span></th><th class="n">Failed <span class="u">(h)</span></th><th>Share</th></tr></thead>
+            <tbody>
+              <tr><td>unoccupied</td><td class="n">4,906</td><td class="n">0</td><td><div class="bar-track"><div class="bar w-56"></div></div></td></tr>
+              <tr><td>occupied_heating</td><td class="n">2,102</td><td class="n">212</td><td><div class="bar-track"><div class="bar w-24"></div></div></td></tr>
+              <tr><td>occupied_cooling</td><td class="n">1,051</td><td class="n">61</td><td><div class="bar-track"><div class="bar w-12"></div></div></td></tr>
+              <tr><td>economizer</td><td class="n">701</td><td class="n">21</td><td><div class="bar-track"><div class="bar w-8"></div></div></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="card stack">
+          <h2>Failed hours by kind</h2>
+          <table>
+            <thead><tr><th>Mode</th><th>Kind</th><th class="n">Hours <span class="u">(h)</span></th></tr></thead>
+            <tbody>
+              <tr><td>occupied_heating</td><td><span class="status fail"><svg class="icon"><use href="#marker-limit_exceeded"/></svg>Limit exceeded (frost)</span></td><td class="n">212</td></tr>
+              <tr><td>occupied_cooling</td><td><span class="status fail"><svg class="icon"><use href="#marker-setpoint_not_met"/></svg>Setpoint not met</span></td><td class="n">61</td></tr>
+              <tr><td>economizer</td><td><span class="status fail"><svg class="icon"><use href="#marker-fighting"/></svg>Fighting (h<sub>oa</sub> &gt; h<sub>ra</sub>)</span></td><td class="n">21</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card stack">
+        <div class="row"><h2>Bin table · hours</h2><div class="spacer"></div><span class="small muted">OA db 2 K bins × coincident W 1 g/kg bins (SI bin edges, per spec §5.9)</span></div>
+        <table>
+          <thead><tr><th>OA db <span class="u">(°C)</span></th><th class="n">W 0–1 <span class="u">(g/kg)</span></th><th class="n">1–2</th><th class="n">2–3</th><th class="n">3–4</th><th class="n">…</th><th class="n">Total <span class="u">(h)</span></th></tr></thead>
+          <tbody>
+            <tr><td>−10 to −8</td><td class="n">31</td><td class="n">22</td><td class="n">0</td><td class="n">0</td><td class="n">…</td><td class="n">53</td></tr>
+            <tr><td>−8 to −6</td><td class="n">18</td><td class="n">71</td><td class="n">3</td><td class="n">0</td><td class="n">…</td><td class="n">92</td></tr>
+            <tr><td>−6 to −4</td><td class="n">6</td><td class="n">104</td><td class="n">39</td><td class="n">0</td><td class="n">…</td><td class="n">149</td></tr>
+            <tr><td>−4 to −2</td><td class="n">0</td><td class="n">88</td><td class="n">121</td><td class="n">12</td><td class="n">…</td><td class="n">221</td></tr>
+          </tbody>
+        </table>
+        <div class="row"><button class="btn">Download hourly CSV</button><span class="hint">Bin totals reconcile with the CSV (M4 gate).</span></div>
+      </div>
+    </div>
+  </main>
+</div>
+</body>
+</html>

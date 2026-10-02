@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sequence — AHU-1 (mockup)</title>
+<link rel="stylesheet" href="assets/tokens.css">
+<link rel="stylesheet" href="mockup.css">
+</head>
+<body>
+<script src="assets/symbols.js"></script>
+<div class="mock-banner">Mockup M0-4 · Sequence editor (spec §5.6, §8.1). Form-based structured conditions; no free text, no expressions.</div>
+
+<header class="topbar">
+  <div class="crumbs"><span class="muted small">Hospital Wing B</span><span class="sep">/</span><h1>AHU-1</h1></div>
+  <nav class="tabs">
+    <a href="unit.html">Unit</a>
+    <a href="sequence.html" aria-current="page">Sequence</a>
+    <a href="#">Conditions</a>
+    <a href="results.html">Results</a>
+    <a href="export.html">Export</a>
+  </nav>
+  <div class="spacer"></div>
+  <button class="btn">Check sequence</button>
+  <div class="segmented" role="group" aria-label="Unit system"><span aria-pressed="true">I-P</span><span>SI</span></div>
+</header>
+<div class="bp-readonly-note">Read-only on screens narrower than 1024 px.</div>
+
+<div class="page three">
+  <aside class="panel stack">
+    <div class="stack tight">
+      <div class="row"><h3>Modes</h3><div class="spacer"></div><button class="btn bp-tablet-up">+ Mode</button></div>
+      <p class="hint">Evaluated in ascending priority. First true wins.</p>
+      <ul class="list">
+        <li><span class="badge num">1</span>occupied_cooling</li>
+        <li><span class="badge num">1</span>occupied_heating</li>
+        <li><span class="badge num">2</span>economizer</li>
+        <li aria-selected="true"><span class="badge num">2</span>warmup</li>
+        <li><span class="badge num">9</span>unoccupied</li>
+      </ul>
+    </div>
+    <div class="stack tight">
+      <div class="row"><h3>Loops</h3><div class="spacer"></div><button class="btn bp-tablet-up">+ Loop</button></div>
+      <ul class="list">
+        <li>sat_cooling</li>
+        <li aria-selected="true">sat_heating</li>
+        <li>mat_low_limit</li>
+        <li>economizer_mat</li>
+      </ul>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="stack">
+      <div class="card stack">
+        <div class="row"><h2>Mode · warmup</h2><div class="spacer"></div><span class="badge">id: warmup</span></div>
+        <div class="row">
+          <label class="field">Priority<input class="num" value="2"></label>
+        </div>
+
+        <h3>Enter when</h3>
+        <div class="cond-group">
+          <div class="row"><span class="chip">ALL of</span><select><option>all</option><option>any</option><option>not</option></select></div>
+          <div class="cond">
+            <select><option>schedule</option><option>oa_db</option><option>space_t</option></select>
+            <select><option>==</option></select>
+            <select><option>pre_occupancy</option><option>occupied</option><option>unoccupied</option></select>
+            <button class="btn">Remove</button>
+          </div>
+          <div class="cond">
+            <select><option>space_t</option></select>
+            <select><option>&lt;</option><option>&lt;=</option><option>&gt;</option><option>&gt;=</option><option>==</option></select>
+            <input class="num" value="68"><span class="unit-suffix">°F</span>
+            <button class="btn">Remove</button>
+          </div>
+          <div class="row"><button class="btn">+ Condition</button><button class="btn">+ Group</button></div>
+        </div>
+
+        <h3>Fixed positions <span class="muted">(applied before loops)</span></h3>
+        <table>
+          <thead><tr><th>Actuator</th><th class="n">Position <span class="u">(%)</span></th><th></th></tr></thead>
+          <tbody>
+            <tr><td class="mono">mix1.oa_fraction</td><td class="n">0</td><td><span class="status warning"><svg class="icon"><use href="#status-warning"/></svg>Below min OA — mode override</span></td></tr>
+            <tr><td class="mono">cc1.valve</td><td class="n">0</td><td></td></tr>
+          </tbody>
+        </table>
+
+        <h3>Loops in this mode <span class="muted">(solved in this order)</span></h3>
+        <ul class="list"><li><span class="badge num">1</span>sat_heating</li></ul>
+      </div>
+
+      <div class="card stack">
+        <div class="row"><h2>Loop · sat_heating</h2></div>
+        <div class="grid-2">
+          <label class="field">Sensor<select><option>SAT — temperature, after:sf1</option><option>MAT — temperature_averaging, after:mix1</option></select></label>
+          <label class="field">Setpoint<span class="row"><input class="num" value="90"><span class="unit-suffix">°F</span></span></label>
+        </div>
+        <h3>Stages <span class="muted">(each parks at its end before the next moves)</span></h3>
+        <div class="stage">
+          <span class="ord num">1</span>
+          <span class="mono">phc1.valve</span>
+          <select><option>direct</option><option>reverse</option></select>
+          <button class="btn">Remove</button>
+        </div>
+        <div class="row"><button class="btn">+ Stage</button></div>
+      </div>
+    </div>
+  </main>
+
+  <aside class="panel right stack">
+    <h3>Static checks</h3>
+    <p class="hint">Run on every change. No weather needed.</p>
+    <div class="issue"><span class="status fail"><svg class="icon"><use href="#status-fail"/></svg></span>
+      <span><strong>Config error.</strong> Loop mat_low_limit names phc2.valve, but there is no component phc2.</span></div>
+    <div class="issue"><span class="status fail"><svg class="icon"><use href="#status-fail"/></svg></span>
+      <span><strong>Mode gap.</strong> No mode is active for OA 41–54 °F (all RH) when schedule = occupied.</span></div>
+    <div class="issue"><span class="status fail"><svg class="icon"><use href="#status-fail"/></svg></span>
+      <span><strong>Mode overlap.</strong> occupied_cooling and occupied_heating (both priority 1) are both true for OA 55–60 °F.</span></div>
+    <div class="issue"><span class="status pass"><svg class="icon"><use href="#status-pass"/></svg></span>
+      <span><strong>Sensor placement.</strong> Mixed-air sensor MAT is averaging type.</span></div>
+    <div class="issue"><span class="status pass"><svg class="icon"><use href="#status-pass"/></svg></span>
+      <span><strong>Coil order.</strong> Preheat phc1 is upstream of cc1.</span></div>
+    <div class="issue"><span class="status pass"><svg class="icon"><use href="#status-pass"/></svg></span>
+      <span><strong>Airflow closure.</strong> Supply 10,000 = OA 3,000 + recirculated 7,000 cfm.</span></div>
+  </aside>
+</div>
+</body>
+</html>

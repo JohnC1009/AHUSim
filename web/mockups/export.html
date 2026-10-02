@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Export — AHU-1 (mockup)</title>
+<link rel="stylesheet" href="assets/tokens.css">
+<link rel="stylesheet" href="mockup.css">
+</head>
+<body>
+<script src="assets/symbols.js"></script>
+<div class="mock-banner">Mockup M0-4 · Sequence export (spec §9). Preview renders the org template with this unit's context object.</div>
+
+<header class="topbar">
+  <div class="crumbs"><span class="muted small">Hospital Wing B</span><span class="sep">/</span><h1>AHU-1</h1></div>
+  <nav class="tabs">
+    <a href="unit.html">Unit</a>
+    <a href="sequence.html">Sequence</a>
+    <a href="#">Conditions</a>
+    <a href="results.html">Results</a>
+    <a href="export.html" aria-current="page">Export</a>
+  </nav>
+  <div class="spacer"></div>
+  <div class="segmented" role="group" aria-label="Unit system"><span aria-pressed="true">I-P</span><span>SI</span></div>
+</header>
+
+<div class="page three">
+  <aside class="panel stack">
+    <h3>Unit version</h3>
+    <select><option>v7 · 2026-10-02</option><option>v6 · 2026-09-28</option></select>
+    <h3>Template</h3>
+    <ul class="list">
+      <li aria-selected="true">Firm 23 09 93 (2026).docx</li>
+      <li>example_230993.docx <span class="badge">built-in</span></li>
+    </ul>
+    <button class="btn">Upload template…</button>
+    <h3>Format</h3>
+    <div class="stack tight">
+      <button class="btn primary">Download .docx</button>
+      <button class="btn">Download Markdown (review)</button>
+      <button class="btn">Download points list (.csv)</button>
+    </div>
+    <div class="stack tight">
+      <span class="status pass"><svg class="icon"><use href="#status-pass"/></svg>All template tags resolved</span>
+      <span class="status warning"><svg class="icon"><use href="#status-warning"/></svg>2 modes have failures in Run 14</span>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="doc-preview">
+      <h2>23 09 93 — Sequence of Operations · AHU-1</h2>
+      <p class="muted">Hospital Wing B · unit version 7</p>
+
+      <h3>Mode: Warm-up (priority 2)</h3>
+      <p><strong>Enters when</strong> the schedule is pre-occupancy <strong>and</strong> space temperature is below 68.0 °F.</p>
+      <p><strong>Fixed positions:</strong> outdoor-air fraction (mix1) 0 %; cooling valve (cc1) 0 %.</p>
+      <p><strong>Control:</strong> modulate the preheat valve (phc1) to hold supply-air temperature (SAT) at 90.0 °F.</p>
+
+      <h3>Mode: Occupied cooling (priority 1)</h3>
+      <p><strong>Enters when</strong> the schedule is occupied <strong>and</strong> outdoor-air enthalpy is above 28.0 Btu/lb.</p>
+      <p><strong>Control:</strong> modulate the cooling valve (cc1) to hold SAT at 55.0 °F; then reheat valve (rhc1).</p>
+
+      <h3>Alarms</h3>
+      <p>Mixed-air temperature (MAT) below 40.0 °F for 5 min: low-limit alarm.</p>
+
+      <p class="disclaimer">Engineering aid only. Not a substitute for PE-reviewed calculations or manufacturer selections.</p>
+    </div>
+  </main>
+
+  <aside class="panel right stack">
+    <h3>Template context</h3>
+    <p class="hint">Tags available in the .docx (docxtpl / Jinja). Documented object, read-only.</p>
+    <table>
+      <thead><tr><th>Tag</th><th>Example</th></tr></thead>
+      <tbody>
+        <tr><td><span class="tag-jinja">{{ unit.name }}</span></td><td>AHU-1</td></tr>
+        <tr><td><span class="tag-jinja">{% for m in modes %}</span></td><td>5 modes</td></tr>
+        <tr><td><span class="tag-jinja">{{ m.name }}</span></td><td>Warm-up</td></tr>
+        <tr><td><span class="tag-jinja">{{ m.enter_text }}</span></td><td>schedule is…</td></tr>
+        <tr><td><span class="tag-jinja">{{ m.fixed }}</span></td><td>2 positions</td></tr>
+        <tr><td><span class="tag-jinja">{% for l in loops %}</span></td><td>4 loops</td></tr>
+        <tr><td><span class="tag-jinja">{{ alarms }}</span></td><td>1 alarm</td></tr>
+        <tr><td><span class="tag-jinja">{{ points }}</span></td><td>23 points</td></tr>
+      </tbody>
+    </table>
+  </aside>
+</div>
+</body>
+</html>

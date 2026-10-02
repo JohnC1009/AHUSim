@@ -1,0 +1,76 @@
+/* Generated from web/src/design/tokens.ts by web/scripts/mockup-assets.mjs. Do not edit. */
+:root {
+  --font-ui: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --font-mono: "JetBrains Mono", "Cascadia Mono", Consolas, monospace;
+  --text-xs: 11px;
+  --text-sm: 12px;
+  --text-md: 14px;
+  --text-lg: 16px;
+  --text-xl: 20px;
+  --text-xxl: 24px;
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --lh-tight: 1.25;
+  --lh-normal: 1.5;
+  --space-0: 0;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --radius-sm: 2px;
+  --radius-md: 4px;
+  --radius-lg: 8px;
+  --radius-pill: 999px;
+  --border-hairline: 1px;
+  --border-thick: 2px;
+  --neutral-0: #ffffff;
+  --neutral-25: #fcfcfb;
+  --neutral-50: #f7f6f4;
+  --neutral-100: #f0efec;
+  --neutral-200: #e2e1dc;
+  --neutral-300: #cbcac4;
+  --neutral-400: #a9a8a1;
+  --neutral-500: #85847d;
+  --neutral-600: #64635d;
+  --neutral-700: #52514e;
+  --neutral-800: #33332f;
+  --neutral-900: #0b0b0b;
+  --accent: #2a78d6;
+  --accent-strong: #1c5cab;
+  --accent-weak: #cde2fb;
+  --pass: #0ca30c;
+  --pass-text: #006300;
+  --pass-bg: #e3f4e3;
+  --warning: #fab219;
+  --warning-text: #7a5200;
+  --warning-bg: #fdf2d6;
+  --fail: #d03b3b;
+  --fail-text: #a52a2a;
+  --fail-bg: #fbe4e4;
+  --layout-topBar: 48px;
+  --layout-sidePanel: 240px;
+  --layout-inspector: 320px;
+  --layout-dock: 400px;
+  --layout-failureRow: 32px;
+  --layout-control: 32px;
+  --layout-icon: 16px;
+  --layout-symbol: 48px;
+  --layout-marker: 8px;
+  --chart-gridStroke: 1;
+  --chart-saturationStroke: 2;
+  --chart-processStroke: 2;
+  --symbol-stroke: 2;
+}
+.num, table { font-variant-numeric: tabular-nums lining-nums; font-feature-settings: "tnum" 1, "lnum" 1; }
+.sym { fill: none; stroke: currentColor; stroke-width: var(--symbol-stroke); stroke-linejoin: round; }
+.status-icon, .marker { fill: currentColor; stroke: currentColor; stroke-width: 0; }
+.glyph { fill: none; stroke: var(--neutral-0); stroke-width: 2; stroke-linecap: round; }
+/* Breakpoints (spec §8.4): hidden below editor width / below tablet width. */
+@media (max-width: 1279px) { .bp-editor-only { display: none !important; } }
+@media (max-width: 1023px) { .bp-tablet-up { display: none !important; } .bp-readonly-note { display: block !important; } }
