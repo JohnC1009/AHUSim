@@ -384,6 +384,8 @@ class Loop(_Model):
     sensor: str
     setpoint: Temperature
     stages: list[Stage] = Field(min_length=1)
+    # Optional: marks a loop whose stages must be heating upstream of cooling (§5.8).
+    role: Literal["preheat", "freeze_protection"] | None = None
 
 
 class Sequence(_Model):

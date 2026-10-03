@@ -26,6 +26,7 @@ class Failure:
     condition_id: str | None = None
     value: float | None = None
     limit: float | None = None
+    severity: str = "error"  # "error" or "warning" (static checks only warn)
 
 
 # --- Message builders: one plain I-P sentence with numbers and units. ---

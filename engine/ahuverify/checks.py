@@ -3,8 +3,9 @@
 from itertools import groupby
 
 from ahuverify import schema, units
-from ahuverify.controls import ConditionInputs, evaluate
+from ahuverify.controls import ConditionInputs, actuator_table, evaluate
 from ahuverify.failures import Failure, FailureKind
+from ahuverify.lanes import ConfigError, compile_unit, site_pressure
 from ahuverify.psychro import si
 from ahuverify.state import AirState
 
@@ -158,3 +159,181 @@ def mode_coverage(seq: schema.Sequence, p: float) -> list[Failure]:
         Failure(kind, message, mode=", ".join(modes) or None)
         for (kind, modes, _, _), message in found.items()
     ]
+
+
+# ---------- configuration checks (spec §5.8) ----------
+
+_HEATING = {"heating_coil_hw", "electric_heater"}
+
+
+def _error(message: str, component: str | None = None) -> Failure:
+    return Failure(FailureKind.CONFIG_ERROR, message, component=component)
+
+
+def _warning(message: str, component: str | None = None) -> Failure:
+    return Failure(
+        FailureKind.CONFIG_ERROR, message, component=component, severity="warning"
+    )
+
+
+def _actuator_ref(
+    cfg: schema.UnitConfig, owner: str, verb: str, ref: str
+) -> list[Failure]:
+    comp, _, act = ref.partition(".")
+    if comp not in cfg.components:
+        return [
+            _error(f"{owner} {verb} {ref}, but there is no component {comp}.", comp)
+        ]
+    have = sorted(
+        r.partition(".")[2] for r in actuator_table(cfg) if r.startswith(f"{comp}.")
+    )
+    if act not in have:
+        listing = ", ".join(have) if have else "none"
+        return [_error(f"{comp} has no actuator {act}; it has: {listing}.", comp)]
+    return []
+
+
+def _sequence_references(cfg: schema.UnitConfig) -> list[Failure]:
+    out = []
+    seq, sensors = cfg.sequence, {s.id for s in cfg.sensors}
+    for lid, loop in seq.loops.items():
+        if loop.sensor not in sensors:
+            out.append(
+                _error(
+                    f"Loop {lid} reads sensor {loop.sensor}, but there is no sensor {loop.sensor}.",
+                    lid,
+                )
+            )
+        for st in loop.stages:
+            out += _actuator_ref(cfg, f"Loop {lid}", "names", st.actuator)
+    for mode in seq.modes:
+        for ref in mode.fixed:
+            out += _actuator_ref(cfg, f"Mode {mode.id}", "fixes", ref)
+        for lid in mode.loops:
+            if lid not in seq.loops:
+                out.append(
+                    _error(
+                        f"Mode {mode.id} runs loop {lid}, but there is no loop {lid}."
+                    )
+                )
+                continue
+            for st in seq.loops[lid].stages:
+                if st.actuator in mode.fixed:
+                    out.append(
+                        _error(
+                            f"Mode {mode.id} fixes {st.actuator} and also drives it from loop {lid}."
+                        )
+                    )
+    return out
+
+
+def _lane_points(cfg: schema.UnitConfig) -> set[str]:
+    box = next((c for c, m in cfg.components.items() if m.type == "mixing_box"), None)
+    pts = {f"after:{t}" for t in cfg.lanes.supply[1:]}
+    pts |= {f"after:{t}" for t in cfg.lanes.return_[1:] if t != box}
+    if box:
+        pts.add(f"after:{box}.relief")
+    return pts
+
+
+def _sensor_placement(cfg: schema.UnitConfig) -> list[Failure]:
+    out, points = [], _lane_points(cfg)
+    boxes = {c for c, m in cfg.components.items() if m.type == "mixing_box"}
+    for s in cfg.sensors:
+        if s.at not in points:
+            out.append(
+                _error(
+                    f"Sensor {s.id} is placed {s.at}, which is not a point in the lanes.",
+                    s.id,
+                )
+            )
+        elif s.at.removeprefix("after:") in boxes and s.type == "temperature":
+            out.append(
+                _warning(
+                    f"Mixed-air sensor {s.id} is a single-point temperature sensor; mixed air stratifies, "
+                    f"so use an averaging sensor.",
+                    s.id,
+                )
+            )
+    return out
+
+
+def _coil_order(cfg: schema.UnitConfig) -> list[Failure]:
+    """Preheat / freeze-protection loops must drive a heater upstream of every cooling coil."""
+    out = []
+    supply = [t.partition(".")[0] for t in cfg.lanes.supply]
+    coolers = [
+        c
+        for c in supply
+        if c in cfg.components and cfg.components[c].type == "cooling_coil_chw"
+    ]
+    for lid, loop in cfg.sequence.loops.items():
+        if loop.role is None:
+            continue
+        role = loop.role.replace("_", "-")
+        for st in loop.stages:
+            comp = st.actuator.partition(".")[0]
+            model = cfg.components.get(comp)
+            if model is None:
+                continue  # reported by _sequence_references
+            if model.type not in _HEATING:
+                out.append(
+                    _error(
+                        f"Loop {lid} is a {role} loop but drives {comp}, which is not a heating coil.",
+                        lid,
+                    )
+                )
+                continue
+            for cc in coolers:
+                if comp in supply and supply.index(comp) > supply.index(cc):
+                    out.append(
+                        _error(
+                            f"Loop {lid} is a {role} loop but {comp} is not upstream of cooling coil {cc}.",
+                            lid,
+                        )
+                    )
+    return out
+
+
+def _airflow_closure(cfg: schema.UnitConfig) -> list[Failure]:
+    """At minimum OA: supply = OA + recirculated, return = recirculated + relief."""
+    a = cfg.airflows
+    q_s, q_min, q_b = a.supply.si, a.min_oa.si, a.pressurization_bias.si
+    cfm = lambda q: f"{units.from_si(q, 'cfm'):,.0f} cfm"
+    out = []
+    if q_min > q_s:
+        out.append(
+            _error(
+                f"The minimum OA ({cfm(q_min)}) is more than the supply airflow ({cfm(q_s)})."
+            )
+        )
+    if q_b >= q_s:
+        out.append(
+            _error(
+                f"The pressurization bias ({cfm(q_b)}) is not less than the supply airflow ({cfm(q_s)})."
+            )
+        )
+    if a.pressurization_bias.sign == "supply_minus_return" and q_min < q_b:
+        out.append(
+            _warning(
+                f"At minimum OA the relief flow would be negative: the {cfm(q_b)} pressurization bias exceeds "
+                f"the {cfm(q_min)} minimum OA, so pressurization is lost at minimum OA."
+            )
+        )
+    return out
+
+
+def static_checks(cfg: schema.UnitConfig) -> list[Failure]:
+    """All checks that need no weather: topology, references, sensor placement,
+    coil order, airflow closure, and mode coverage."""
+    out = []
+    try:
+        compile_unit(cfg)
+    except ConfigError as e:
+        out.append(_error(str(e)))
+    out += _sequence_references(cfg)
+    out += _sensor_placement(cfg)
+    out += _coil_order(cfg)
+    out += _airflow_closure(cfg)
+    out += mode_coverage(cfg.sequence, site_pressure(cfg.unit))
+    return out
