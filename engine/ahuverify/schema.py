@@ -165,13 +165,35 @@ class CoolingCoilRating(_Model):
     chwr: Temperature
 
 
-class CoolingCoilChw(_Model):
+class CoolingCoilDesign(_Model):
+    """Chilled-water coil modelled from one rating point (ADP / bypass factor)."""
+
     type: Literal["cooling_coil_chw"]
     mode: Literal["design"]
     face_area: Area
     rating: CoolingCoilRating
     # Optional: when absent the face-velocity check is skipped with a warning.
     max_face_velocity: Velocity | None = None
+
+
+class LeavingAir(_Model):
+    db: Temperature
+    rh: RelHum
+
+
+class CoolingCoilMeasured(_Model):
+    """Chilled-water coil with a forced (measured) leaving state."""
+
+    type: Literal["cooling_coil_chw"]
+    mode: Literal["measured"]
+    face_area: Area
+    leaving: LeavingAir
+    max_face_velocity: Velocity | None = None
+
+
+CoolingCoilChw = Annotated[
+    CoolingCoilDesign | CoolingCoilMeasured, Field(discriminator="mode")
+]
 
 
 class EnergyWheel(_Model):
