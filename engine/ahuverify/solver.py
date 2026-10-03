@@ -254,3 +254,15 @@ def _finish(states, results, passes: int, converged: bool) -> SolveResult:
                     )
                 )
     return SolveResult(states, results, passes, converged, failures)
+
+
+def oa_damper_flow(unit: CompiledUnit, result: SolveResult) -> float:
+    """Volumetric OA flow at the OA damper, m³/s: m_oa × v of the air entering
+    the mixing box's OA port (where min OA is stated)."""
+    if unit.mixing_box is None:
+        return 0.0
+    m_oa = result.components[unit.mixing_box].loads["m_oa"]
+    tokens = [s.token for s in unit.supply]
+    i = next(k for k, s in enumerate(unit.supply) if s.comp == unit.mixing_box)
+    key = "oa_intake" if i == 1 else f"after:{tokens[i - 1]}"
+    return m_oa * result.states[key].state.v
