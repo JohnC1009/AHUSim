@@ -182,8 +182,26 @@ class EnergyWheel(_Model):
     eatr: Annotated[float, Field(ge=0.0, le=0.05)]
 
 
+class Filter(_Model):
+    type: Literal["filter"]
+    dp_clean: Pressure
+    dp_dirty: Pressure
+
+
+class Fan(_Model):
+    """Supply, return or exhaust fan. Airflow is fixed per mode in v1."""
+
+    type: Literal["fan"]
+    design_airflow: Airflow  # at the fan inlet
+    total_static: Pressure  # excluding filter banks; their ΔP is added
+    eta_fan: Annotated[float, Field(gt=0.0, le=1.0)]
+    eta_motor: Annotated[float, Field(gt=0.0, le=1.0)]
+    motor_in_airstream: bool
+
+
 Component = Annotated[
-    MixingBox | CoolingCoilChw | EnergyWheel, Field(discriminator="type")
+    MixingBox | CoolingCoilChw | EnergyWheel | Filter | Fan,
+    Field(discriminator="type"),
 ]
 
 
