@@ -98,8 +98,8 @@ def test_f13_winter_wheel_frost_check():
     # F-13 conditions: OA −15 °C / 70 %, RA 22 °C / 30 %, ε 0.75 / 0.65, no bypass.
     # Computed: exhaust leaves ≈ −5.6 °C at ≈ 93 % RH — below 0 °C but NOT
     # saturated, so the spec §5.4 criterion does not flag frost for this
-    # enthalpy wheel. PENDING OWNER REVIEW (spec §10.2 says frost flagged;
-    # see docs/decisions/0004). The sensible-only case below does frost.
+    # enthalpy wheel. Approved by the owner as computed, 2026-10-03
+    # (docs/decisions/0004). The sensible-only case below does frost.
     r = wheel().solve(cross_inlets(WINTER_OA, WINTER_RA, 4.0, 4.0), {}, P)
     e_out = r.outlets["exhaust_out"].state
     assert e_out.t_db == pytest.approx(-5.63, abs=0.05)

@@ -13,8 +13,7 @@ from the spec text or need the owner's eye.
    (the RA→OA line does not cross saturation). An enthalpy wheel returns
    moisture to the supply, which keeps its exhaust unsaturated; a sensible-only
    exchanger at the same conditions does frost, and the tests show both. The
-   test encodes the computed result, marked pending owner review, as §10.2 says
-   F-13 values are produced by the implementation then reviewed.
+   test encodes the computed result. **Approved by owner as computed, 2026-10-03.**
 2. **⚑ Wheel effectiveness when supply exceeds exhaust.** The spec formula
    T_s,out = T_oa + ε·(T_ex − T_oa) is used as written when m_s ≤ m_e. When
    m_s > m_e, ε is applied to the smaller flow (AHRI 1060 definition);

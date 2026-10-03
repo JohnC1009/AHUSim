@@ -4,7 +4,7 @@ Read `docs/SPEC.md` before doing anything. It is the source of truth. If this fi
 
 ## Current milestone
 
-**M1** — see `docs/SPEC.md` §12. (M0 gate approved by owner 2026-10-03.) Update this line when the owner confirms a milestone's exit gate has passed. Never start work on a later milestone before then.
+**M2** — see `docs/SPEC.md` §12. (M0 gate approved 2026-10-03; M1 gate approved 2026-10-03 with F-13 accepted as computed and M1-9 deferred for lack of manufacturer data — see `docs/decisions/coil-model.md`.) Update this line when the owner confirms a milestone's exit gate has passed. Never start work on a later milestone before then.
 
 ## Who you are working for
 
@@ -25,9 +25,9 @@ The owner is an HVAC controls engineer and a novice-to-intermediate Python progr
 4. **Mass basis.** Convert every volumetric airflow to dry-air mass flow once (`m = Q / v` at the stated location). Mixing, wheels and loads use mass flow. Never hardcode 1.08, 4.5 or 0.68 in the engine.
 5. **Tests first for physics.** For any physics ticket: write the failing test from the spec's fixtures, show it fails, then implement. A ticket is not done until `pytest` passes in full.
 6. **No `eval`, no `exec`.** Sequence conditions are structured data (spec §6.3), evaluated by our own code.
-7. **Ask before adding a dependency.** List it, say why, and wait for a yes.
+7. **Dependencies: decide, pin, record.** Add a dependency when the ticket needs one and nothing already in the stack does the job. Pin the exact version, record what and why in `docs/decisions/`, and name it in the ticket note. Prefer dev-only; a new runtime dependency in `engine/` must keep it pure Python (Pyodide, spec §2).
 8. **Never commit secrets.** Keys live in `.env` (git-ignored); `.env.example` lists names only.
-9. **Stop and ask** on anything listed in spec §14 (open questions), any change to the data schema, and any change to a fixture value.
+9. **Decide and record** spec §14 open questions, data-schema changes and fixture-value changes: make the call, write the reasoning in `docs/decisions/`, and flag it ⚑ in the ticket note so the owner can overturn it. Stop and ask only for choices that are costly to reverse or outside engineering: licensing, money, accounts and hosting (e.g. §14-3, §14-4, §14-5).
 
 ## Commands
 

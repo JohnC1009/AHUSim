@@ -1,7 +1,13 @@
 # Cooling-coil off-design model (M1-9)
 
-Status: **harness ready, awaiting owner's manufacturer selections.** The BF rule
-changes only with owner approval (spec §12, M1-9).
+Status: **deferred (owner, 2026-10-03): no manufacturer selections available.**
+The spec model is accepted provisionally, with the limit below. The harness
+stays in place; drop a selection file in when one turns up and run it. The BF
+rule changes only with owner approval.
+
+Consequence for M2+: at hot, humid conditions the model can report a cooling
+setpoint as met when a real coil would not (capacity overstated). Every result
+carries `chwr_implied`; a value far above the rated CHWR marks such a case.
 
 ## The model under test (spec §5.4, `components/cooling_coil.py`)
 
