@@ -123,7 +123,10 @@
   <aside class="panel right stack bp-tablet-up">
     <div class="row"><svg class="sym-icon"><use href="#sym-coil"/></svg><h2>cc1 · Cooling coil (CHW)</h2></div>
     <label class="field">Model mode<select><option>design (from rating)</option><option>measured</option></select></label>
-    <label class="field">Face area<span class="row"><input class="num" value="22"><span class="unit-suffix">ft²</span></span></label>
+    <div class="grid-2">
+      <label class="field">Face area<span class="row"><input class="num" value="22"><span class="unit-suffix">ft²</span></span></label>
+      <label class="field">Max face velocity<span class="row"><input class="num" value="500" placeholder="not set"><span class="unit-suffix">fpm</span></span></label>
+    </div>
     <h3>Rating</h3>
     <div class="grid-2">
       <label class="field">EAT db (°F)<input class="num" value="80.5"></label>
@@ -138,7 +141,7 @@
       <thead><tr><th>Quantity</th><th class="n">Value</th><th class="n">Limit</th><th>Status</th></tr></thead>
       <tbody>
         <tr><td>Valve <span class="u muted">(%)</span></td><td class="n">78</td><td class="n">100</td><td><span class="status pass"><svg class="icon"><use href="#status-pass"/></svg>OK</span></td></tr>
-        <tr><td>Face velocity <span class="u muted">(fpm)</span></td><td class="n">455</td><td class="n">—</td><td><span class="status warning"><svg class="icon"><use href="#status-warning"/></svg>No limit</span></td></tr>
+        <tr><td>Face velocity <span class="u muted">(fpm)</span></td><td class="n">455</td><td class="n">500</td><td><span class="status pass"><svg class="icon"><use href="#status-pass"/></svg>OK</span></td></tr>
         <tr><td>Total load <span class="u muted">(MBH)</span></td><td class="n">334.7</td><td class="n"></td><td></td></tr>
         <tr><td>SHR <span class="u muted">(–)</span></td><td class="n">0.74</td><td class="n"></td><td></td></tr>
       </tbody>
@@ -159,8 +162,8 @@
       </li>
       <li>
         <span class="status warning kind"><svg class="icon"><use href="#status-warning"/></svg>Static check</span>
-        <span class="where">all modes · cc1</span>
-        <span>Cooling coil cc1 has no maximum face velocity, so that check is skipped.</span>
+        <span class="where">annual · erw1</span>
+        <span>Energy wheel erw1 has no frost parameters, so annual runs cannot start.</span>
       </li>
     </ul>
   </section>

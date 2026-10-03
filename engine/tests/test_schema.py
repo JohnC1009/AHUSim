@@ -20,7 +20,8 @@ def load(path: Path) -> dict:
 def test_round_trip_is_identical(path):
     original = load(path)
     model = UnitConfig.model_validate(original)
-    as_json = model.model_dump_json(by_alias=True)
+    # exclude_unset: write back only what was entered (optional fields left out stay out).
+    as_json = model.model_dump_json(by_alias=True, exclude_unset=True)
     again = UnitConfig.model_validate_json(as_json)
     assert again == model
     # Nothing added, nothing lost, relative to the file on disk.
@@ -70,3 +71,17 @@ def test_export_json_schema():
         "conditions",
     }
     assert "return" in schema["$defs"]["Lanes"]["properties"]
+
+
+def test_cooling_coil_max_face_velocity_optional():
+    data = load(FIXTURES / "example_6_1.json")
+    cfg = UnitConfig.model_validate(data)
+    assert cfg.components["cc1"].max_face_velocity is None  # not set: check skipped
+
+    data["components"]["cc1"]["max_face_velocity"] = {"value": 500, "unit": "fpm"}
+    cfg = UnitConfig.model_validate(data)
+    assert cfg.components["cc1"].max_face_velocity.value == 500
+
+    data["components"]["cc1"]["max_face_velocity"]["unit"] = "cfm"
+    with pytest.raises(ValidationError):
+        UnitConfig.model_validate(data)

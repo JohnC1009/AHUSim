@@ -126,6 +126,8 @@ class CoolingCoilChw(_Model):
     mode: Literal["design"]
     face_area: Area
     rating: CoolingCoilRating
+    # Optional: when absent the face-velocity check is skipped with a warning.
+    max_face_velocity: Velocity | None = None
 
 
 class EnergyWheel(_Model):

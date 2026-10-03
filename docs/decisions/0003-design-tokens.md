@@ -1,6 +1,7 @@
 # 0003 — Design tokens and M0 mockups
 
-Status: proposed (awaiting owner approval at the M0 gate)
+Status: proposed (awaiting owner approval at the M0 gate). Sweep shapes,
+face-velocity limit and bin units decided by owner 2026-10-03 (below).
 
 ## What exists
 
@@ -25,7 +26,7 @@ Status: proposed (awaiting owner approval at the M0 gate)
   marker shape per kind", but §8.4 allows one accent and three status
   colours. Ten failure kinds would need ten more colours. Choice made: every
   failure uses the fail colour; the **shape** carries the kind (11 shapes,
-  pass included). Needs owner confirmation.
+  pass included). **Approved by owner 2026-10-03.**
 - **Breakpoints.** ≥ 1280 px full editor. 1024–1279 px: palette hidden
   (no topology edits), inspector kept (parameter edits). < 1024 px:
   inspector hidden too, read-only notice shown.
@@ -37,9 +38,14 @@ Status: proposed (awaiting owner approval at the M0 gate)
 
 ## Gaps found in the schema / spec while drawing
 
-1. `cooling_coil_chw` (and the heating coil) list a face-velocity check in
-   §5.4, but neither has a maximum-velocity field. The mockup shows
-   "No limit" as a warning. Proposal: add `max_face_velocity` to coils when
-   their tickets land (M1-5, M1-6).
-2. Annual bin edges are SI (2 K × 1 g/kg, §5.9). In I-P view, show SI bin
-   edges (as mocked) or convert to e.g. 4 °F × 7 gr/lb bins?
+1. **Coil face-velocity limit — decided: add `max_face_velocity`.**
+   Added to `cooling_coil_chw` now (optional, a velocity in fpm or m/s).
+   When absent, the face-velocity check is skipped and a static-check warning
+   says so. The heating coil gets the same field when its model lands (M1-5);
+   see the draft in 0002.
+2. **Annual bins — decided: SI bins, switchable to I-P.** Bin edges are
+   always the SI grid of §5.9 (2 K × 1 g/kg), so totals never change with the
+   unit system. The page-wide I-P/SI toggle only relabels the edges:
+   2 K = 3.6 °F and 1 g/kg = 7 gr/lb, so −10…−8 °C reads 14.0…17.6 °F.
+   The API returns the edges in both systems; `web/` only picks one
+   (hard rule 1).

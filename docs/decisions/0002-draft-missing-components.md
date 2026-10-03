@@ -17,11 +17,13 @@ the owner's yes.
   "dp_dirty": {"value": 1.0, "unit": "in_wc"}},
 
 "phc1": {"type": "heating_coil_hw", "face_area": {"value": 22, "unit": "ft2"},
+  "max_face_velocity": {"value": 500, "unit": "fpm"},
   "rating": {"eat": {"value": 40, "unit": "F"}, "lat": {"value": 90, "unit": "F"},
              "airflow": {"value": 10000, "unit": "cfm"},
              "ewt": {"value": 180, "unit": "F"}, "lwt": {"value": 160, "unit": "F"}}},
 
 "rhc1": {"type": "heating_coil_hw", "face_area": {"value": 22, "unit": "ft2"},
+  "max_face_velocity": {"value": 500, "unit": "fpm"},
   "rating": {"eat": {"value": 55, "unit": "F"}, "lat": {"value": 75, "unit": "F"},
              "airflow": {"value": 10000, "unit": "cfm"},
              "ewt": {"value": 180, "unit": "F"}, "lwt": {"value": 160, "unit": "F"}}},
@@ -46,6 +48,7 @@ the owner's yes.
 | `flt1` | MERV 13 bank: ~0.35 in. w.c. clean, 1.0 in. w.c. final (change-out). |
 | `phc1` | Exactly the F-10 heating coil (§10.2): 40 → 90 °F at 10,000 cfm, 180/160 °F water. Same 22 ft² face as `cc1` (455 fpm). |
 | `rhc1` | Reheat after the cooling coil: 55 → 75 °F at 10,000 cfm, same water. |
+| both HW coils | `max_face_velocity` 500 fpm (owner decision 2026-10-03 to add the field; 500 fpm is a common design ceiling, and it sits downstream of the wet cooling coil for `rhc1`). Actual: 10,000 / 22 = 455 fpm. |
 | `sf1` | Same ΔP and fan η as F-8 (4.0 in. w.c., 0.65). Motor in airstream (plenum/fan-array) — F-8 tests the other case. |
 | `rf1` | Carries all return air: supply − bias = 10,000 − 200 = 9,800 cfm. |
 | `ef1` | Carries relief = OA − bias; sized for full economizer: 9,800 cfm. |
