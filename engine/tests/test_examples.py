@@ -24,3 +24,15 @@ def test_default_unit_notebook_runs():
     )
     assert "SAT" in text and "Converged" in text
     assert "min_oa" not in text  # 3,000 cfm at the OA damper is met in both cases
+
+
+def test_failure_message_examples_run(capsys):
+    import runpy
+
+    runpy.run_path(str(EXAMPLES / "failure_messages.py"), run_name="__main__")
+    rows = [
+        line
+        for line in capsys.readouterr().out.splitlines()
+        if line.startswith("| ") and line[2].isdigit()
+    ]
+    assert len(rows) >= 10

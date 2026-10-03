@@ -393,6 +393,27 @@ class Sequence(_Model):
     loops: dict[str, Loop]
 
 
+class OperatingCondition(_Model):
+    """One named operating point for a scenario run (spec §5.9)."""
+
+    id: str
+    oa_db: Temperature
+    oa_wb: Temperature | None = None  # give OA wet bulb …
+    oa_rh: RelHum | None = None  # … or OA RH, not both
+    ra_db: Temperature
+    ra_rh: RelHum
+    schedule: str | None = None
+    space_t: Temperature | None = None  # defaults to RA dry bulb
+
+    @model_validator(mode="after")
+    def one_oa_humidity(self) -> OperatingCondition:
+        if (self.oa_wb is None) == (self.oa_rh is None):
+            raise ValueError(
+                f"Condition {self.id}: give OA wet bulb or OA RH, exactly one."
+            )
+        return self
+
+
 class Conditions(_Model):
     weather_file: str | None = None
     scenarios: list[str] = []
