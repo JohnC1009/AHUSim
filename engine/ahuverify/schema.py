@@ -151,6 +151,8 @@ class MixingBoxDampers(_Model):
 class MixingBox(_Model):
     type: Literal["mixing_box"]
     dampers: MixingBoxDampers
+    # Optional: mixed-air temperature below this fails the freeze check.
+    freeze_threshold: Temperature | None = None
 
 
 class CoolingCoilRating(_Model):
