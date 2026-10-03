@@ -1,0 +1,11 @@
+{
+  "_comment": "F-14: 'heating' and 'cooling' share priority 1 and are both active at OA 9-11 C (one overlap); nothing is active at OA 30 C and above (one gap).",
+  "modes": [
+    {"id": "heating", "priority": 1,
+     "enter": {"var": "oa_db", "op": "<", "value": {"value": 12, "unit": "C"}}},
+    {"id": "cooling", "priority": 1,
+     "enter": {"all": [{"var": "oa_db", "op": ">", "value": {"value": 8, "unit": "C"}},
+                       {"var": "oa_db", "op": "<", "value": {"value": 30, "unit": "C"}}]}}
+  ],
+  "loops": {}
+}
