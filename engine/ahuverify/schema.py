@@ -274,8 +274,29 @@ class AdiabaticHumidifier(_Model):
     max_rate: MassFlow
 
 
+class Space(_Model):
+    """Optional single space node: return air = supply air + space loads (spec §5.4)."""
+
+    type: Literal["space"]
+    sensible_load: Power
+    latent_load: Power | None = None  # give latent as heat …
+    moisture_load: MassFlow | None = None  # … or as moisture, not both
+    t_min: Temperature | None = None
+    t_max: Temperature | None = None
+    rh_max: RelHum | None = None
+
+    @model_validator(mode="after")
+    def one_latent_input(self) -> Space:
+        if self.latent_load is not None and self.moisture_load is not None:
+            raise ValueError(
+                "Give the space latent load as heat or as moisture, not both."
+            )
+        return self
+
+
 Component = Annotated[
     MixingBox
+    | Space
     | SensibleHx
     | DesiccantWheel
     | SteamHumidifier
