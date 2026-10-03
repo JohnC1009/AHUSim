@@ -130,3 +130,12 @@ def test_implied_chwr_reproduces_rating_and_rises_with_load():
     assert rated == pytest.approx(F(56.0), abs=0.05)
     hot = c.solve({"in": rated_inlet(95, 78)}, {"valve": 1.0}, P).loads["chwr_implied"]
     assert hot > rated
+
+
+def test_adp_shifts_with_chws():
+    # Spec §5.4: ADP moves by (CHWS − CHWS_rated); colder water, colder leaving air.
+    c = cc1()
+    t_rated, _ = c.valve_open_leaving(rated_inlet())
+    t_cold, _ = c.valve_open_leaving(rated_inlet(), chws=F(42.0))
+    assert c.adp_at(F(42.0)) == pytest.approx(c.t_adp - 2.0 / 1.8, abs=1e-9)
+    assert t_cold < t_rated

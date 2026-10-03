@@ -1,0 +1,15 @@
+{
+  "source": "Example: the cc1 rating point itself (model must reproduce it). Copy this file per manufacturer selection.",
+  "altitude": {"value": 33, "unit": "ft"},
+  "coil": {"type": "cooling_coil_chw", "mode": "design", "face_area": {"value": 22, "unit": "ft2"},
+    "rating": {"eat_db": {"value": 80.5, "unit": "F"}, "eat_wb": {"value": 67.0, "unit": "F"},
+               "lat_db": {"value": 55.0, "unit": "F"}, "lat_wb": {"value": 54.0, "unit": "F"},
+               "airflow": {"value": 10000, "unit": "cfm"},
+               "chws": {"value": 44, "unit": "F"}, "chwr": {"value": 56, "unit": "F"}}},
+  "points": [
+    {"id": "rated", "eat_db": {"value": 80.5, "unit": "F"}, "eat_wb": {"value": 67.0, "unit": "F"},
+     "airflow": {"value": 10000, "unit": "cfm"}, "chws": {"value": 44, "unit": "F"},
+     "lat_db": {"value": 55.0, "unit": "F"}, "lat_wb": {"value": 54.0, "unit": "F"},
+     "q_total": {"value": 384.2, "unit": "MBH"}}
+  ]
+}

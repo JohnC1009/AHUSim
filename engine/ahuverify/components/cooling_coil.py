@@ -5,7 +5,8 @@ Design mode (spec §5.4), calibrated from one rating point:
   BF   = (LAT − ADP) / (EAT − ADP), the same in T and in W (collinear).
   Off-design airflow: BF = BF_rated ^ ((m / m_rated) ^ −0.2), i.e. BF = exp(−NTU)
   with NTU ∝ m^−0.2 (air-side coefficient ∝ velocity^0.8). Assumption to be
-  validated in M1-9. ADP is held at its rated value (CHWS = rated CHWS).
+  validated in M1-9. ADP shifts by (CHWS − CHWS_rated); the unit solve uses
+  the rated CHWS (no CHWS input in v1), comparisons may pass another.
   Valve open: leaving = ADP + BF·(entering − ADP) on T and W; sensible only
   (W constant) when the entering dew point is at or below the ADP.
   Valve u < 1: h and W move linearly from entering (u = 0) to valve-open (u = 1).
@@ -124,14 +125,22 @@ class CoolingCoilDesignMode:
     def bypass_factor(self, m: float) -> float:
         return bypass_factor_at_airflow(self.bf_rated, m, self.m_rated)
 
-    def valve_open_leaving(self, inlet: AirStream) -> tuple[float, float]:
+    def adp_at(self, chws: float) -> float:
+        """ADP (°C) at another supply water temperature: ADP_rated + (CHWS − CHWS_rated)."""
+        return self.t_adp + (chws - self.chws)
+
+    def valve_open_leaving(
+        self, inlet: AirStream, chws: float | None = None
+    ) -> tuple[float, float]:
         """(T, W) leaving at valve = 1: ADP + BF·(entering − ADP); W kept if coil is dry."""
         s = inlet.state
+        t_adp = self.t_adp if chws is None else self.adp_at(chws)
+        w_adp = si.GetSatHumRatio(t_adp, s.p)
         bf = self.bypass_factor(inlet.m_da)
-        t = self.t_adp + bf * (s.t_db - self.t_adp)
-        if s.t_dp <= self.t_adp:
+        t = t_adp + bf * (s.t_db - t_adp)
+        if s.t_dp <= t_adp:
             return t, s.w
-        return t, self.w_adp + bf * (s.w - self.w_adp)
+        return t, w_adp + bf * (s.w - w_adp)
 
     def solve(
         self, inlets: dict[str, AirStream], actuators: dict[str, float], p: float
