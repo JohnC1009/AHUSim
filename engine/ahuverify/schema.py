@@ -416,7 +416,8 @@ class OperatingCondition(_Model):
 
 class Conditions(_Model):
     weather_file: str | None = None
-    scenarios: list[str] = []
+    scenarios: list[str] = []  # named design days (M4)
+    operating: list[OperatingCondition] = []  # explicit operating points
 
 
 # --- Top level ---

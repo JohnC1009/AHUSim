@@ -1,0 +1,35 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ahuverify-api"
+version = "0.0.1"
+description = "AHU Sequence Verifier API (FastAPI)"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "ahuverify",
+    "fastapi==0.142.2",
+    "uvicorn==0.54.0",
+    "sqlalchemy==2.1.3",
+    "alembic==1.20.0",
+    "psycopg[binary]==3.3.6",
+    "pyjwt==2.15.1",
+    "cryptography==50.0.2",
+]
+
+[project.optional-dependencies]
+dev = ["pytest==9.1.1", "ruff==0.16.10", "httpx==0.28.1"]
+
+[tool.setuptools.packages.find]
+include = ["app*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+target-version = "py312"
+
+[tool.ruff.lint.flake8-bugbear]
+# FastAPI dependency markers are evaluated once per request, by design.
+extend-immutable-calls = ["fastapi.Depends", "fastapi.Query"]

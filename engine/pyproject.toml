@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "ahuverify"
-version = "0.0.1"
+version = "0.3.0"
 description = "AHU Sequence Verifier engine (steady-state psychrometrics and controls)"
 requires-python = ">=3.12,<3.13"
 dependencies = [
