@@ -246,8 +246,40 @@ class ElectricHeater(_Model):
     stages: Annotated[int, Field(ge=1)] | None = None
 
 
+class SensibleHx(_Model):
+    """Plate exchanger, runaround loop or heat pipe: sensible-only heat recovery."""
+
+    type: Literal["plate_hx", "runaround", "heat_pipe"]
+    eps_sens: Fraction
+    # Optional pair: both needed for the face-velocity check (supply side).
+    face_area: Area | None = None
+    max_face_velocity: Velocity | None = None
+
+
+class DesiccantWheel(_Model):
+    type: Literal["desiccant_wheel"]
+    eps_lat: Fraction  # fraction of process-air moisture removed at full output
+    regen_heat: Power  # regeneration heat at full output
+
+
+class SteamHumidifier(_Model):
+    type: Literal["steam_humidifier"]
+    max_rate: MassFlow
+    absorption_distance: Length
+
+
+class AdiabaticHumidifier(_Model):
+    type: Literal["adiabatic_humidifier"]
+    effectiveness: Fraction
+    max_rate: MassFlow
+
+
 Component = Annotated[
     MixingBox
+    | SensibleHx
+    | DesiccantWheel
+    | SteamHumidifier
+    | AdiabaticHumidifier
     | CoolingCoilChw
     | EnergyWheel
     | Filter
