@@ -67,6 +67,13 @@ _TO_SI: dict[str, tuple[float, float]] = {
     "lb/h": (_KG_PER_LB / 3600.0, 0.0),
     # relative humidity / fraction -> 0–1
     "%": (0.01, 0.0),
+    # display-only units (not accepted as input)
+    "kg/kg": (1.0, 0.0),
+    "gr/lb": (1.0 / 7000.0, 0.0),  # 7,000 grains per pound
+    "g/kg": (0.001, 0.0),
+    "m3/kg": (1.0, 0.0),
+    "ft3/lb": (_M_PER_FT**3 / _KG_PER_LB, 0.0),
+    "lb/min": (_KG_PER_LB / 60.0, 0.0),
 }
 
 SUPPORTED_UNITS = frozenset(_TO_SI)

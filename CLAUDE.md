@@ -4,7 +4,7 @@ Read `docs/SPEC.md` before doing anything. It is the source of truth. If this fi
 
 ## Current milestone
 
-**M2** — see `docs/SPEC.md` §12. (M0 gate approved 2026-10-03; M1 gate approved 2026-10-03 with F-13 accepted as computed and M1-9 deferred for lack of manufacturer data — see `docs/decisions/coil-model.md`.) Update this line when the owner confirms a milestone's exit gate has passed. Never start work on a later milestone before then.
+**M3** — see `docs/SPEC.md` §12. (M0 and M1 gates approved 2026-10-03, M1 with F-13 accepted as computed and M1-9 deferred — see `docs/decisions/coil-model.md`; M2 gate approved 2026-10-03.) Update this line when the owner confirms a milestone's exit gate has passed. Never start work on a later milestone before then.
 
 ## Who you are working for
 
