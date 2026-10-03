@@ -33,12 +33,21 @@ class ComponentResult:
     residuals: dict[str, float] = field(default_factory=dict)
 
 
+# A check passes within 0.01 % of its limit: a value that a search set onto the
+# limit is not failed by round-off (0.3 cfm at 3,000 cfm, 0.15 fpm at 1,500 fpm).
+CHECK_TOLERANCE = 1e-4
+
+
 def at_most(name: str, value: float, limit: float, unit: str) -> Check:
-    return Check(name, value, limit, unit, value <= limit * (1 + 1e-9))
+    return Check(
+        name, value, limit, unit, value <= limit + CHECK_TOLERANCE * abs(limit)
+    )
 
 
 def at_least(name: str, value: float, limit: float, unit: str) -> Check:
-    return Check(name, value, limit, unit, value >= limit * (1 - 1e-9))
+    return Check(
+        name, value, limit, unit, value >= limit - CHECK_TOLERANCE * abs(limit)
+    )
 
 
 def closure_residuals(

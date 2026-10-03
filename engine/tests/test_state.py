@@ -27,6 +27,7 @@ def test_property_fixtures(fid, t, rh, w_g, h, v, t_dp, t_wb):
 
 
 def test_f4_saturation_pressure():
+    # F-4: saturation pressure at 25 °C / 0 °C = 3,169.2 Pa / 611.2 Pa.
     assert si.GetSatVapPres(25.0) == pytest.approx(3169.2, abs=0.05)
     assert si.GetSatVapPres(0.0) == pytest.approx(611.2, abs=0.05)
 

@@ -70,7 +70,8 @@ def _return_volume_flow(unit: CompiledUnit) -> float:
 
 
 def _initial_flows(unit: CompiledUnit, oa: AirState, ra: AirState, acts) -> _Flows:
-    m_s = unit.cfg.airflows.supply.si / oa.v
+    # RA is a far better stand-in than OA for the supply-fan discharge state.
+    m_s = unit.cfg.airflows.supply.si / ra.v
     m_r = _return_volume_flow(unit) / ra.v
     if unit.mixing_box is None:
         return _Flows(m_s, m_r, m_s, m_r, m_r)
@@ -191,7 +192,8 @@ def solve(
     """Solve one operating condition. RA is the boundary return state (or the
     first guess for it when the unit has a space node)."""
     acts = _actuators_by_component(unit, actuators)
-    max_passes = max_passes or (20 if unit.space else 10)
+    # Each sweep shrinks the change ~4-5x; winter wheel cases need ~10 sweeps.
+    max_passes = max_passes or 30
     flows = _initial_flows(unit, oa, ra, acts)
     sweep = _Sweep(unit, oa, acts)
     ra_state = ra

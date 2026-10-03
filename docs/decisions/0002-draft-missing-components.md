@@ -1,6 +1,6 @@
 # 0002 — Draft definitions for the §6.1 components that have none
 
-Status: draft, for owner review. Not yet in the schema or the fixture.
+Status: accepted (owner, 2026-10-03). Merged into the schema and `engine/tests/fixtures/example_6_1.json` in M1; all four "choices to confirm" taken as proposed.
 
 The §6.1 lanes name `flt1`, `phc1`, `rhc1`, `sf1`, `rf1`, `ef1` but the
 example defines none of them. Per decision 0001, each type's schema model is
