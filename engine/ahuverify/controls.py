@@ -259,8 +259,8 @@ def run_condition(
     loop_failures: dict[str, Failure | None] = {}
     previous = None
     passes = 0
+    f_min = 0.0
     for passes in range(1, MAX_LOOP_PASSES + 1):
-        f_min = 0.0
         if oa_ref and oa_ref not in mode.fixed:
             f_min = min_oa_position(unit, i.oa, i.ra, positions)
             if oa_ref not in staged:
@@ -289,7 +289,66 @@ def run_condition(
 
     result = run(positions)
     found = [f for f in loop_failures.values() if f is not None] + list(result.failures)
+    oa_fixed = oa_ref is not None and oa_ref in mode.fixed
+    found += limit_failures(cfg, result, skip_oa_minimums=oa_fixed)
+    found += heat_cool_fighting(unit, positions)
+    if oa_ref and not oa_fixed:
+        found += economizer_fighting(unit.mixing_box, positions[oa_ref], f_min, result)
     return ConditionOutcome(mode.id, positions, result, found)
+
+
+def limit_failures(
+    cfg: schema.UnitConfig, result: SolveResult, *, skip_oa_minimums: bool
+) -> list[Failure]:
+    """Every failed component check. A mode that fixes the OA damper does so on
+    purpose, so its min-OA and pressurization consequences are not reported."""
+    out = []
+    for name, r in result.components.items():
+        ctype = cfg.components[name].type
+        for c in r.checks:
+            if c.passed or (
+                skip_oa_minimums and c.name in ("min_oa", "pressurization_bias")
+            ):
+                continue
+            out.append(failures.from_check(name, ctype, c))
+    return out
+
+
+_HEATERS = {"heating_coil_hw": "valve", "electric_heater": "output"}
+_ACTIVE = 0.001
+
+
+def heat_cool_fighting(
+    unit: CompiledUnit, positions: dict[str, float]
+) -> list[Failure]:
+    """FIGHTING: a heater upstream of a cooling coil while both are on. Reheat
+    downstream of the cooling coil is normal dehumidification and not flagged."""
+    out, heating = [], []
+    for slot in unit.supply[1:]:
+        ctype = unit.components[slot.comp].type
+        if ctype in _HEATERS:
+            pos = positions.get(f"{slot.comp}.{_HEATERS[ctype]}", 0.0)
+            if pos > _ACTIVE:
+                heating.append((slot.comp, pos))
+        elif ctype == "cooling_coil_chw":
+            cool = positions.get(f"{slot.comp}.valve", 0.0)
+            if cool > _ACTIVE:
+                out += [
+                    failures.fighting_heat_cool(h, hp, slot.comp, cool)
+                    for h, hp in heating
+                ]
+    return out
+
+
+def economizer_fighting(
+    box: str, pos: float, f_min: float, result: SolveResult
+) -> list[Failure]:
+    """FIGHTING: OA damper above minimum while OA enthalpy exceeds return enthalpy."""
+    oa, ra = result.states["oa_intake"].state, result.states["ra"].state
+    if pos > f_min + _ACTIVE and oa.h > ra.h:
+        h_oa, h_ra = units.enthalpy_ip(oa.t_db, oa.w), units.enthalpy_ip(ra.t_db, ra.w)
+        return [failures.fighting_economizer(box, pos, f_min, h_oa, h_ra)]
+    return []
 
 
 def _ends(off, f_min: float) -> tuple[float, float]:
