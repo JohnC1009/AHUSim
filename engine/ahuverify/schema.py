@@ -334,6 +334,8 @@ class Comparison(_Model):
     @model_validator(mode="after")
     def value_matches_var(self) -> Comparison:
         if self.var == "schedule":
+            if self.op != "==":
+                raise ValueError("A schedule can only be compared with '=='.")
             ok = isinstance(self.value, str)
             expected = "a schedule name (text)"
         elif self.var in TEMPERATURE_VARS:
