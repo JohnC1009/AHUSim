@@ -4,7 +4,7 @@ Read `docs/SPEC.md` before doing anything. It is the source of truth. If this fi
 
 ## Current milestone
 
-**M0** — see `docs/SPEC.md` §12. Update this line when the owner confirms a milestone's exit gate has passed. Never start work on a later milestone before then.
+**M1** — see `docs/SPEC.md` §12. (M0 gate approved by owner 2026-10-03.) Update this line when the owner confirms a milestone's exit gate has passed. Never start work on a later milestone before then.
 
 ## Who you are working for
 

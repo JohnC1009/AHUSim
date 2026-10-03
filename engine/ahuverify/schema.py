@@ -1,7 +1,8 @@
 """Pydantic models for the unit configuration (the config contract, spec §6).
 
 Every user-entered quantity is stored as {"value": ..., "unit": ...} exactly as
-entered. Conversion to SI happens later, in `units.py` (M1-1), not here.
+entered, so a config round-trips unchanged. `quantity.si` gives the SI value
+(conversion in `units.py`); engine code reads only `.si`.
 
 Scope (M0-3): only what the §6.1 example uses. Cross-references (lane ids,
 sensor ids, actuator refs) are NOT checked here; that is compile-time
@@ -13,6 +14,8 @@ from __future__ import annotations
 from typing import Annotated, Literal
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
+
+from ahuverify import units
 
 SCHEMA_VERSION = "0.2"
 
@@ -27,39 +30,78 @@ class _Model(BaseModel):
 # --- Quantities: one class per physical dimension, units listed per class ---
 
 
-class Temperature(_Model):
+class _Quantity(_Model):
+    value: float
+    unit: str
+
+    @property
+    def si(self) -> float:
+        """Value in the engine's SI unit (°C, m, m², m/s, Pa, m³/s, kJ/kg, W, kg/s, 0–1)."""
+        return units.to_si(self.value, self.unit)
+
+
+class Temperature(_Quantity):
     value: float
     unit: Literal["F", "C"]
 
 
-class Enthalpy(_Model):
+class Enthalpy(_Quantity):
     value: float
     unit: Literal["Btu/lb", "kJ/kg"]
 
 
-class Length(_Model):
+class Length(_Quantity):
     value: float
     unit: Literal["ft", "m"]
 
 
-class Area(_Model):
+class Area(_Quantity):
     value: float
     unit: Literal["ft2", "m2"]
 
 
-class Velocity(_Model):
+class Velocity(_Quantity):
     value: float
     unit: Literal["fpm", "m/s"]
 
 
-class Pressure(_Model):
+class Pressure(_Quantity):
     value: float
     unit: Literal["Pa", "in_wc"]
 
 
-class Airflow(_Model):
+class Airflow(_Quantity):
     value: float
     unit: Literal["cfm", "m3/s", "L/s", "m3/h"]
+
+
+class Power(_Quantity):
+    value: float
+    unit: Literal["W", "kW", "Btu/h", "MBH"]
+
+
+class MassFlow(_Quantity):
+    value: float
+    unit: Literal["kg/s", "kg/h", "lb/h"]
+
+
+class RelHum(_Quantity):
+    value: Annotated[float, Field(ge=0.0, le=100.0)]
+    unit: Literal["%"]
+
+
+QUANTITY_TYPES = (
+    Temperature,
+    Enthalpy,
+    Length,
+    Area,
+    Velocity,
+    Pressure,
+    Airflow,
+    Power,
+    MassFlow,
+    RelHum,
+)
 
 
 class AirflowAt(Airflow):

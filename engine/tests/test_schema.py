@@ -76,11 +76,13 @@ def test_export_json_schema():
 def test_cooling_coil_max_face_velocity_optional():
     data = load(FIXTURES / "example_6_1.json")
     cfg = UnitConfig.model_validate(data)
+    assert cfg.components["cc1"].max_face_velocity.value == 500  # fixture value
+
+    del data["components"]["cc1"]["max_face_velocity"]
+    cfg = UnitConfig.model_validate(data)
     assert cfg.components["cc1"].max_face_velocity is None  # not set: check skipped
 
     data["components"]["cc1"]["max_face_velocity"] = {"value": 500, "unit": "fpm"}
-    cfg = UnitConfig.model_validate(data)
-    assert cfg.components["cc1"].max_face_velocity.value == 500
 
     data["components"]["cc1"]["max_face_velocity"]["unit"] = "cfm"
     with pytest.raises(ValidationError):

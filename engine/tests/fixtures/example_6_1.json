@@ -16,6 +16,7 @@
                   "ra": {"free_area": {"value": 4.5, "unit": "ft2"}, "max_velocity": {"value": 1500, "unit": "fpm"}},
                   "relief": {"free_area": {"value": 6.0, "unit": "ft2"}, "max_velocity": {"value": 1500, "unit": "fpm"}}}},
     "cc1": {"type": "cooling_coil_chw", "mode": "design", "face_area": {"value": 22, "unit": "ft2"},
+      "max_face_velocity": {"value": 500, "unit": "fpm"},
       "rating": {"eat_db": {"value": 80.5, "unit": "F"}, "eat_wb": {"value": 67.0, "unit": "F"},
                  "lat_db": {"value": 55.0, "unit": "F"}, "lat_wb": {"value": 54.0, "unit": "F"},
                  "airflow": {"value": 10000, "unit": "cfm"},
