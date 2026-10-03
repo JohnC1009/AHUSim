@@ -190,3 +190,15 @@ def test_space_range_check():
     r = solve(with_space(sensible_mbh=400.0), **SUMMER)
     check = next(c for c in r.components["space1"].checks if c.name == "t_max")
     assert not check.passed
+
+
+def test_solve_with_oa_damper_closed():
+    # Warmup (spec §6.1 / F-12): OA closed, so recirculation carries all supply air.
+    acts = {**SUMMER["actuators"], "mix1.oa_fraction": 0.0, "cc1.valve": 0.0}
+    r = solve(UNIT, SUMMER["oa"], SUMMER["ra"], acts)
+    assert r.converged and r.valid, r.failures
+    assert r.components["mix1"].loads["m_oa"] == 0.0
+    ra_damper = next(
+        c for c in r.components["mix1"].checks if c.name == "face_velocity_ra"
+    )
+    assert not ra_damper.passed

@@ -210,3 +210,11 @@ def test_desiccant_no_drying_without_regen_heat():
     )
     assert r.outlets["supply_out"].state.w == pytest.approx(SUMMER_OA.w)
     assert not next(c for c in r.checks if c.name == "regen_heat").passed
+
+
+def test_wheel_with_no_supply_flow():
+    # OA damper closed (warmup): nothing crosses the supply side of the wheel.
+    r = wheel(eatr=0.02).solve(cross_inlets(WINTER_OA, WINTER_RA, 0.0, 4.0), {}, P)
+    assert r.outlets["supply_out"].m_da == 0.0
+    assert r.outlets["exhaust_out"].state.t_db == pytest.approx(22.0, abs=1e-9)
+    assert closes(r)

@@ -34,8 +34,15 @@ def mix_airstreams(streams: list[AirStream], p: float) -> tuple[AirStream, float
     h_mix = Σ m·h / Σ m and W_mix = Σ m·W / Σ m (ASHRAE Fundamentals 2017,
     Ch. 1, adiabatic mixing of two moist airstreams). If the mix lands beyond
     saturation, the excess condenses as fog at constant enthalpy.
-    Returns (mixed stream, condensate in kg/s).
+    Streams with zero flow do not take part; if every flow is zero the result
+    is an empty stream at the first state. Returns (mixed stream, condensate kg/s).
     """
+    flowing = [s for s in streams if s.m_da > 0.0]
+    if not flowing:
+        return AirStream(streams[0].state, 0.0), 0.0
+    if len(flowing) == 1:
+        return flowing[0], 0.0
+    streams = flowing
     m = sum(s.m_da for s in streams)
     h = sum(s.m_da * s.state.h for s in streams) / m
     w = sum(s.m_da * s.state.w for s in streams) / m

@@ -20,7 +20,7 @@ def carryover_swap(
     supply: AirStream, exhaust: AirStream, eatr: float, p: float
 ) -> tuple[AirStream, AirStream, float]:
     """Swap m_t = EATR·m_supply between the two inlets (exhaust → supply, OA → exhaust)."""
-    if eatr <= 0.0:
+    if eatr <= 0.0 or supply.m_da <= 0.0 or exhaust.m_da <= 0.0:
         return supply, exhaust, 0.0
     m_t = eatr * supply.m_da
     if m_t > exhaust.m_da:

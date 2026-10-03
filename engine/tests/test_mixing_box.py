@@ -100,3 +100,12 @@ def test_freeze_check_both_sides():
 
 def test_freeze_check_skipped_when_not_set():
     assert all(c.name != "mixed_air_freeze" for c in run(box(), 0.30).checks)
+
+
+def test_mix_airstreams_with_a_zero_flow_stream():
+    from ahuverify.components.mixing_box import mix_airstreams
+
+    mixed, cond = mix_airstreams([AirStream(OA, 0.0), AirStream(RA, 2.0)], P)
+    assert mixed.state == RA and mixed.m_da == 2.0 and cond == 0.0
+    empty, _ = mix_airstreams([AirStream(OA, 0.0)], P)
+    assert empty.m_da == 0.0
