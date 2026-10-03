@@ -199,8 +199,39 @@ class Fan(_Model):
     motor_in_airstream: bool
 
 
+class HeatingCoilRating(_Model):
+    eat: Temperature
+    lat: Temperature
+    airflow: Airflow  # at entering air conditions
+    ewt: Temperature
+    lwt: Temperature
+
+
+class HeatingCoilHw(_Model):
+    """Hot-water coil (preheat or reheat)."""
+
+    type: Literal["heating_coil_hw"]
+    face_area: Area
+    rating: HeatingCoilRating
+    # Optional: when absent the face-velocity check is skipped with a warning.
+    max_face_velocity: Velocity | None = None
+
+
+class ElectricHeater(_Model):
+    type: Literal["electric_heater"]
+    power: Power
+    # Number of equal stages; None = modulating (SCR).
+    stages: Annotated[int, Field(ge=1)] | None = None
+
+
 Component = Annotated[
-    MixingBox | CoolingCoilChw | EnergyWheel | Filter | Fan,
+    MixingBox
+    | CoolingCoilChw
+    | EnergyWheel
+    | Filter
+    | Fan
+    | HeatingCoilHw
+    | ElectricHeater,
     Field(discriminator="type"),
 ]
 
