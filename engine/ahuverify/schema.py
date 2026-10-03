@@ -437,3 +437,9 @@ class UnitConfig(_Model):
 def export_json_schema() -> dict:
     """JSON Schema of `UnitConfig`, using the JSON key names ("return", "not")."""
     return UnitConfig.model_json_schema(by_alias=True)
+
+
+if __name__ == "__main__":
+    import json
+
+    print(json.dumps(export_json_schema(), indent=2, ensure_ascii=False))

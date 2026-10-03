@@ -1,0 +1,1540 @@
+{
+  "$defs": {
+    "AdiabaticHumidifier": {
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "adiabatic_humidifier",
+          "title": "Type",
+          "type": "string"
+        },
+        "effectiveness": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Effectiveness",
+          "type": "number"
+        },
+        "max_rate": {
+          "$ref": "#/$defs/MassFlow"
+        }
+      },
+      "required": [
+        "type",
+        "effectiveness",
+        "max_rate"
+      ],
+      "title": "AdiabaticHumidifier",
+      "type": "object"
+    },
+    "Airflow": {
+      "additionalProperties": false,
+      "properties": {
+        "value": {
+          "title": "Value",
+          "type": "number"
+        },
+        "unit": {
+          "enum": [
+            "cfm",
+            "m3/s",
+            "L/s",
+            "m3/h"
+          ],
+          "title": "Unit",
+          "type": "string"
+        }
+      },
+      "required": [
+        "value",
+        "unit"
+      ],
+      "title": "Airflow",
+      "type": "object"
+    },
+    "AirflowAt": {
+      "additionalProperties": false,
+      "description": "A volumetric airflow and the location whose air state converts it to mass.",
+      "properties": {
+        "value": {
+          "title": "Value",
+          "type": "number"
+        },
+        "unit": {
+          "enum": [
+            "cfm",
+            "m3/s",
+            "L/s",
+            "m3/h"
+          ],
+          "title": "Unit",
+          "type": "string"
+        },
+        "at": {
+          "title": "At",
+          "type": "string"
+        }
+      },
+      "required": [
+        "value",
+        "unit",
+        "at"
+      ],
+      "title": "AirflowAt",
+      "type": "object"
+    },
+    "Airflows": {
+      "additionalProperties": false,
+      "properties": {
+        "supply": {
+          "$ref": "#/$defs/AirflowAt"
+        },
+        "min_oa": {
+          "$ref": "#/$defs/AirflowAt"
+        },
+        "pressurization_bias": {
+          "$ref": "#/$defs/PressurizationBias"
+        }
+      },
+      "required": [
+        "supply",
+        "min_oa",
+        "pressurization_bias"
+      ],
+      "title": "Airflows",
+      "type": "object"
+    },
+    "AllOf": {
+      "additionalProperties": false,
+      "properties": {
+        "all": {
+          "items": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/AllOf"
+              },
+              {
+                "$ref": "#/$defs/AnyOf"
+              },
+              {
+                "$ref": "#/$defs/NotOf"
+              },
+              {
+                "$ref": "#/$defs/Comparison"
+              }
+            ]
+          },
+          "minItems": 1,
+          "title": "All",
+          "type": "array"
+        }
+      },
+      "required": [
+        "all"
+      ],
+      "title": "AllOf",
+      "type": "object"
+    },
+    "AnyOf": {
+      "additionalProperties": false,
+      "properties": {
+        "any": {
+          "items": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/AllOf"
+              },
+              {
+                "$ref": "#/$defs/AnyOf"
+              },
+              {
+                "$ref": "#/$defs/NotOf"
+              },
+              {
+                "$ref": "#/$defs/Comparison"
+              }
+            ]
+          },
+          "minItems": 1,
+          "title": "Any",
+          "type": "array"
+        }
+      },
+      "required": [
+        "any"
+      ],
+      "title": "AnyOf",
+      "type": "object"
+    },
+    "Area": {
+      "additionalProperties": false,
+      "properties": {
+        "value": {
+          "title": "Value",
+          "type": "number"
+        },
+        "unit": {
+          "enum": [
+            "ft2",
+            "m2"
+          ],
+          "title": "Unit",
+          "type": "string"
+        }
+      },
+      "required": [
+        "value",
+        "unit"
+      ],
+      "title": "Area",
+      "type": "object"
+    },
+    "Comparison": {
+      "additionalProperties": false,
+      "properties": {
+        "var": {
+          "enum": [
+            "oa_db",
+            "oa_h",
+            "oa_dp",
+            "ra_db",
+            "ra_h",
+            "space_t",
+            "schedule"
+          ],
+          "title": "Var",
+          "type": "string"
+        },
+        "op": {
+          "enum": [
+            "<",
+            "<=",
+            ">",
+            ">=",
+            "=="
+          ],
+          "title": "Op",
+          "type": "string"
+        },
+        "value": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "$ref": "#/$defs/Temperature"
+            },
+            {
+              "$ref": "#/$defs/Enthalpy"
+            }
+          ],
+          "title": "Value"
+        }
+      },
+      "required": [
+        "var",
+        "op",
+        "value"
+      ],
+      "title": "Comparison",
+      "type": "object"
+    },
+    "Conditions": {
+      "additionalProperties": false,
+      "properties": {
+        "weather_file": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Weather File"
+        },
+        "scenarios": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Scenarios",
+          "type": "array"
+        },
+        "operating": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/OperatingCondition"
+          },
+          "title": "Operating",
+          "type": "array"
+        }
+      },
+      "title": "Conditions",
+      "type": "object"
+    },
+    "CoolingCoilDesign": {
+      "additionalProperties": false,
+      "description": "Chilled-water coil modelled from one rating point (ADP / bypass factor).",
+      "properties": {
+        "type": {
+          "const": "cooling_coil_chw",
+          "title": "Type",
+          "type": "string"
+        },
+        "mode": {
+          "const": "design",
+          "title": "Mode",
+          "type": "string"
+        },
+        "face_area": {
+          "$ref": "#/$defs/Area"
+        },
+        "rating": {
+          "$ref": "#/$defs/CoolingCoilRating"
+        },
+        "max_face_velocity": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Velocity"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "type",
+        "mode",
+        "face_area",
+        "rating"
+      ],
+      "title": "CoolingCoilDesign",
+      "type": "object"
+    },
+    "CoolingCoilMeasured": {
+      "additionalProperties": false,
+      "description": "Chilled-water coil with a forced (measured) leaving state.",
+      "properties": {
+        "type": {
+          "const": "cooling_coil_chw",
+          "title": "Type",
+          "type": "string"
+        },
+        "mode": {
+          "const": "measured",
+          "title": "Mode",
+          "type": "string"
+        },
+        "face_area": {
+          "$ref": "#/$defs/Area"
+        },
+        "leaving": {
+          "$ref": "#/$defs/LeavingAir"
+        },
+        "max_face_velocity": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Velocity"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "type",
+        "mode",
+        "face_area",
+        "leaving"
+      ],
+      "title": "CoolingCoilMeasured",
+      "type": "object"
+    },
+    "CoolingCoilRating": {
+      "additionalProperties": false,
+      "properties": {
+        "eat_db": {
+          "$ref": "#/$defs/Temperature"
+        },
+        "eat_wb": {
+          "$ref": "#/$defs/Temperature"
+        },
+        "lat_db": {
+          "$ref": "#/$defs/Temperature"
+        },
+        "lat_wb": {
+          "$ref": "#/$defs/Temperature"
+        },
+        "airflow": {
+          "$ref": "#/$defs/Airflow"
+        },
+        "chws": {
+          "$ref": "#/$defs/Temperature"
+        },
+        "chwr": {
+          "$ref": "#/$defs/Temperature"
+        }
+      },
+      "required": [
+        "eat_db",
+        "eat_wb",
+        "lat_db",
+        "lat_wb",
+        "airflow",
+        "chws",
+        "chwr"
+      ],
+      "title": "CoolingCoilRating",
+      "type": "object"
+    },
+    "Damper": {
+      "additionalProperties": false,
+      "properties": {
+        "free_area": {
+          "$ref": "#/$defs/Area"
+        },
+        "max_velocity": {
+          "$ref": "#/$defs/Velocity"
+        }
+      },
+      "required": [
+        "free_area",
+        "max_velocity"
+      ],
+      "title": "Damper",
+      "type": "object"
+    },
+    "DesiccantWheel": {
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "desiccant_wheel",
+          "title": "Type",
+          "type": "string"
+        },
+        "eps_lat": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Eps Lat",
+          "type": "number"
+        },
+        "regen_heat": {
+          "$ref": "#/$defs/Power"
+        }
+      },
+      "required": [
+        "type",
+        "eps_lat",
+        "regen_heat"
+      ],
+      "title": "DesiccantWheel",
+      "type": "object"
+    },
+    "ElectricHeater": {
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "electric_heater",
+          "title": "Type",
+          "type": "string"
+        },
+        "power": {
+          "$ref": "#/$defs/Power"
+        },
+        "stages": {
+          "anyOf": [
+            {
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Stages"
+        }
+      },
+      "required": [
+        "type",
+        "power"
+      ],
+      "title": "ElectricHeater",
+      "type": "object"
+    },
+    "EnergyWheel": {
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "energy_wheel",
+          "title": "Type",
+          "type": "string"
+        },
+        "eps_sens": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Eps Sens",
+          "type": "number"
+        },
+        "eps_lat": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Eps Lat",
+          "type": "number"
+        },
+        "purge": {
+          "title": "Purge",
+          "type": "boolean"
+        },
+        "eatr": {
+          "maximum": 0.05,
+          "minimum": 0.0,
+          "title": "Eatr",
+          "type": "number"
+        }
+      },
+      "required": [
+        "type",
+        "eps_sens",
+        "eps_lat",
+        "purge",
+        "eatr"
+      ],
+      "title": "EnergyWheel",
+      "type": "object"
+    },
+    "Enthalpy": {
+      "additionalProperties": false,
+      "properties": {
+        "value": {
+          "title": "Value",
+          "type": "number"
+        },
+        "unit": {
+          "enum": [
+            "Btu/lb",
+            "kJ/kg"
+          ],
+          "title": "Unit",
+          "type": "string"
+        }
+      },
+      "required": [
+        "value",
+        "unit"
+      ],
+      "title": "Enthalpy",
+      "type": "object"
+    },
+    "Fan": {
+      "additionalProperties": false,
+      "description": "Supply, return or exhaust fan. Airflow is fixed per mode in v1.",
+      "properties": {
+        "type": {
+          "const": "fan",
+          "title": "Type",
+          "type": "string"
+        },
+        "design_airflow": {
+          "$ref": "#/$defs/Airflow"
+        },
+        "total_static": {
+          "$ref": "#/$defs/Pressure"
+        },
+        "eta_fan": {
+          "exclusiveMinimum": 0.0,
+          "maximum": 1.0,
+          "title": "Eta Fan",
+          "type": "number"
+        },
+        "eta_motor": {
+          "exclusiveMinimum": 0.0,
+          "maximum": 1.0,
+          "title": "Eta Motor",
+          "type": "number"
+        },
+        "motor_in_airstream": {
+          "title": "Motor In Airstream",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "type",
+        "design_airflow",
+        "total_static",
+        "eta_fan",
+        "eta_motor",
+        "motor_in_airstream"
+      ],
+      "title": "Fan",
+      "type": "object"
+    },
+    "Filter": {
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "filter",
+          "title": "Type",
+          "type": "string"
+        },
+        "dp_clean": {
+          "$ref": "#/$defs/Pressure"
+        },
+        "dp_dirty": {
+          "$ref": "#/$defs/Pressure"
+        }
+      },
+      "required": [
+        "type",
+        "dp_clean",
+        "dp_dirty"
+      ],
+      "title": "Filter",
+      "type": "object"
+    },
+    "HeatingCoilHw": {
+      "additionalProperties": false,
+      "description": "Hot-water coil (preheat or reheat).",
+      "properties": {
+        "type": {
+          "const": "heating_coil_hw",
+          "title": "Type",
+          "type": "string"
+        },
+        "face_area": {
+          "$ref": "#/$defs/Area"
+        },
+        "rating": {
+          "$ref": "#/$defs/HeatingCoilRating"
+        },
+        "max_face_velocity": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Velocity"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "type",
+        "face_area",
+        "rating"
+      ],
+      "title": "HeatingCoilHw",
+      "type": "object"
+    },
+    "HeatingCoilRating": {
+      "additionalProperties": false,
+      "properties": {
+        "eat": {
+          "$ref": "#/$defs/Temperature"
+        },
+        "lat": {
+          "$ref": "#/$defs/Temperature"
+        },
+        "airflow": {
+          "$ref": "#/$defs/Airflow"
+        },
+        "ewt": {
+          "$ref": "#/$defs/Temperature"
+        },
+        "lwt": {
+          "$ref": "#/$defs/Temperature"
+        }
+      },
+      "required": [
+        "eat",
+        "lat",
+        "airflow",
+        "ewt",
+        "lwt"
+      ],
+      "title": "HeatingCoilRating",
+      "type": "object"
+    },
+    "Lanes": {
+      "additionalProperties": false,
+      "properties": {
+        "supply": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Supply",
+          "type": "array"
+        },
+        "return": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Return",
+          "type": "array"
+        }
+      },
+      "required": [
+        "supply",
+        "return"
+      ],
+      "title": "Lanes",
+      "type": "object"
+    },
+    "LeavingAir": {
+      "additionalProperties": false,
+      "properties": {
+        "db": {
+          "$ref": "#/$defs/Temperature"
+        },
+        "rh": {
+          "$ref": "#/$defs/RelHum"
+        }
+      },
+      "required": [
+        "db",
+        "rh"
+      ],
+      "title": "LeavingAir",
+      "type": "object"
+    },
+    "Length": {
+      "additionalProperties": false,
+      "properties": {
+        "value": {
+          "title": "Value",
+          "type": "number"
+        },
+        "unit": {
+          "enum": [
+            "ft",
+            "m"
+          ],
+          "title": "Unit",
+          "type": "string"
+        }
+      },
+      "required": [
+        "value",
+        "unit"
+      ],
+      "title": "Length",
+      "type": "object"
+    },
+    "Loop": {
+      "additionalProperties": false,
+      "properties": {
+        "sensor": {
+          "title": "Sensor",
+          "type": "string"
+        },
+        "setpoint": {
+          "$ref": "#/$defs/Temperature"
+        },
+        "stages": {
+          "items": {
+            "$ref": "#/$defs/Stage"
+          },
+          "minItems": 1,
+          "title": "Stages",
+          "type": "array"
+        },
+        "role": {
+          "anyOf": [
+            {
+              "enum": [
+                "preheat",
+                "freeze_protection"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Role"
+        }
+      },
+      "required": [
+        "sensor",
+        "setpoint",
+        "stages"
+      ],
+      "title": "Loop",
+      "type": "object"
+    },
+    "MassFlow": {
+      "additionalProperties": false,
+      "properties": {
+        "value": {
+          "title": "Value",
+          "type": "number"
+        },
+        "unit": {
+          "enum": [
+            "kg/s",
+            "kg/h",
+            "lb/h"
+          ],
+          "title": "Unit",
+          "type": "string"
+        }
+      },
+      "required": [
+        "value",
+        "unit"
+      ],
+      "title": "MassFlow",
+      "type": "object"
+    },
+    "MixingBox": {
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "mixing_box",
+          "title": "Type",
+          "type": "string"
+        },
+        "dampers": {
+          "$ref": "#/$defs/MixingBoxDampers"
+        },
+        "freeze_threshold": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Temperature"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "type",
+        "dampers"
+      ],
+      "title": "MixingBox",
+      "type": "object"
+    },
+    "MixingBoxDampers": {
+      "additionalProperties": false,
+      "properties": {
+        "oa": {
+          "$ref": "#/$defs/Damper"
+        },
+        "ra": {
+          "$ref": "#/$defs/Damper"
+        },
+        "relief": {
+          "$ref": "#/$defs/Damper"
+        }
+      },
+      "required": [
+        "oa",
+        "ra",
+        "relief"
+      ],
+      "title": "MixingBoxDampers",
+      "type": "object"
+    },
+    "Mode": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "priority": {
+          "title": "Priority",
+          "type": "integer"
+        },
+        "enter": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/AllOf"
+            },
+            {
+              "$ref": "#/$defs/AnyOf"
+            },
+            {
+              "$ref": "#/$defs/NotOf"
+            },
+            {
+              "$ref": "#/$defs/Comparison"
+            }
+          ],
+          "title": "Enter"
+        },
+        "fixed": {
+          "additionalProperties": {
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "type": "number"
+          },
+          "default": {},
+          "title": "Fixed",
+          "type": "object"
+        },
+        "loops": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Loops",
+          "type": "array"
+        }
+      },
+      "required": [
+        "id",
+        "priority",
+        "enter"
+      ],
+      "title": "Mode",
+      "type": "object"
+    },
+    "NotOf": {
+      "additionalProperties": false,
+      "properties": {
+        "not": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/AllOf"
+            },
+            {
+              "$ref": "#/$defs/AnyOf"
+            },
+            {
+              "$ref": "#/$defs/NotOf"
+            },
+            {
+              "$ref": "#/$defs/Comparison"
+            }
+          ],
+          "title": "Not"
+        }
+      },
+      "required": [
+        "not"
+      ],
+      "title": "NotOf",
+      "type": "object"
+    },
+    "OperatingCondition": {
+      "additionalProperties": false,
+      "description": "One named operating point for a scenario run (spec §5.9).",
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "oa_db": {
+          "$ref": "#/$defs/Temperature"
+        },
+        "oa_wb": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Temperature"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "oa_rh": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/RelHum"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "ra_db": {
+          "$ref": "#/$defs/Temperature"
+        },
+        "ra_rh": {
+          "$ref": "#/$defs/RelHum"
+        },
+        "schedule": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Schedule"
+        },
+        "space_t": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Temperature"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "id",
+        "oa_db",
+        "ra_db",
+        "ra_rh"
+      ],
+      "title": "OperatingCondition",
+      "type": "object"
+    },
+    "Power": {
+      "additionalProperties": false,
+      "properties": {
+        "value": {
+          "title": "Value",
+          "type": "number"
+        },
+        "unit": {
+          "enum": [
+            "W",
+            "kW",
+            "Btu/h",
+            "MBH"
+          ],
+          "title": "Unit",
+          "type": "string"
+        }
+      },
+      "required": [
+        "value",
+        "unit"
+      ],
+      "title": "Power",
+      "type": "object"
+    },
+    "Pressure": {
+      "additionalProperties": false,
+      "properties": {
+        "value": {
+          "title": "Value",
+          "type": "number"
+        },
+        "unit": {
+          "enum": [
+            "Pa",
+            "in_wc"
+          ],
+          "title": "Unit",
+          "type": "string"
+        }
+      },
+      "required": [
+        "value",
+        "unit"
+      ],
+      "title": "Pressure",
+      "type": "object"
+    },
+    "PressurizationBias": {
+      "additionalProperties": false,
+      "properties": {
+        "value": {
+          "title": "Value",
+          "type": "number"
+        },
+        "unit": {
+          "enum": [
+            "cfm",
+            "m3/s",
+            "L/s",
+            "m3/h"
+          ],
+          "title": "Unit",
+          "type": "string"
+        },
+        "sign": {
+          "enum": [
+            "supply_minus_return",
+            "return_minus_supply"
+          ],
+          "title": "Sign",
+          "type": "string"
+        }
+      },
+      "required": [
+        "value",
+        "unit",
+        "sign"
+      ],
+      "title": "PressurizationBias",
+      "type": "object"
+    },
+    "RelHum": {
+      "additionalProperties": false,
+      "properties": {
+        "value": {
+          "maximum": 100.0,
+          "minimum": 0.0,
+          "title": "Value",
+          "type": "number"
+        },
+        "unit": {
+          "const": "%",
+          "title": "Unit",
+          "type": "string"
+        }
+      },
+      "required": [
+        "value",
+        "unit"
+      ],
+      "title": "RelHum",
+      "type": "object"
+    },
+    "SensibleHx": {
+      "additionalProperties": false,
+      "description": "Plate exchanger, runaround loop or heat pipe: sensible-only heat recovery.",
+      "properties": {
+        "type": {
+          "enum": [
+            "plate_hx",
+            "runaround",
+            "heat_pipe"
+          ],
+          "title": "Type",
+          "type": "string"
+        },
+        "eps_sens": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Eps Sens",
+          "type": "number"
+        },
+        "face_area": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Area"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "max_face_velocity": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Velocity"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "type",
+        "eps_sens"
+      ],
+      "title": "SensibleHx",
+      "type": "object"
+    },
+    "Sensor": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "type": {
+          "enum": [
+            "temperature",
+            "temperature_averaging"
+          ],
+          "title": "Type",
+          "type": "string"
+        },
+        "at": {
+          "pattern": "^after:\\S+$",
+          "title": "At",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "type",
+        "at"
+      ],
+      "title": "Sensor",
+      "type": "object"
+    },
+    "Sequence": {
+      "additionalProperties": false,
+      "properties": {
+        "modes": {
+          "items": {
+            "$ref": "#/$defs/Mode"
+          },
+          "title": "Modes",
+          "type": "array"
+        },
+        "loops": {
+          "additionalProperties": {
+            "$ref": "#/$defs/Loop"
+          },
+          "title": "Loops",
+          "type": "object"
+        }
+      },
+      "required": [
+        "modes",
+        "loops"
+      ],
+      "title": "Sequence",
+      "type": "object"
+    },
+    "Space": {
+      "additionalProperties": false,
+      "description": "Optional single space node: return air = supply air + space loads (spec §5.4).",
+      "properties": {
+        "type": {
+          "const": "space",
+          "title": "Type",
+          "type": "string"
+        },
+        "sensible_load": {
+          "$ref": "#/$defs/Power"
+        },
+        "latent_load": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Power"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "moisture_load": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/MassFlow"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "t_min": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Temperature"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "t_max": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Temperature"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "rh_max": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/RelHum"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "type",
+        "sensible_load"
+      ],
+      "title": "Space",
+      "type": "object"
+    },
+    "Stage": {
+      "additionalProperties": false,
+      "properties": {
+        "actuator": {
+          "title": "Actuator",
+          "type": "string"
+        },
+        "action": {
+          "enum": [
+            "direct",
+            "reverse"
+          ],
+          "title": "Action",
+          "type": "string"
+        }
+      },
+      "required": [
+        "actuator",
+        "action"
+      ],
+      "title": "Stage",
+      "type": "object"
+    },
+    "SteamHumidifier": {
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "steam_humidifier",
+          "title": "Type",
+          "type": "string"
+        },
+        "max_rate": {
+          "$ref": "#/$defs/MassFlow"
+        },
+        "absorption_distance": {
+          "$ref": "#/$defs/Length"
+        }
+      },
+      "required": [
+        "type",
+        "max_rate",
+        "absorption_distance"
+      ],
+      "title": "SteamHumidifier",
+      "type": "object"
+    },
+    "Temperature": {
+      "additionalProperties": false,
+      "properties": {
+        "value": {
+          "title": "Value",
+          "type": "number"
+        },
+        "unit": {
+          "enum": [
+            "F",
+            "C"
+          ],
+          "title": "Unit",
+          "type": "string"
+        }
+      },
+      "required": [
+        "value",
+        "unit"
+      ],
+      "title": "Temperature",
+      "type": "object"
+    },
+    "UnitInfo": {
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "altitude": {
+          "$ref": "#/$defs/Length"
+        },
+        "pressure_override": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Pressure"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "name",
+        "altitude"
+      ],
+      "title": "UnitInfo",
+      "type": "object"
+    },
+    "Velocity": {
+      "additionalProperties": false,
+      "properties": {
+        "value": {
+          "title": "Value",
+          "type": "number"
+        },
+        "unit": {
+          "enum": [
+            "fpm",
+            "m/s"
+          ],
+          "title": "Unit",
+          "type": "string"
+        }
+      },
+      "required": [
+        "value",
+        "unit"
+      ],
+      "title": "Velocity",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "0.2",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "unit": {
+      "$ref": "#/$defs/UnitInfo"
+    },
+    "airflows": {
+      "$ref": "#/$defs/Airflows"
+    },
+    "lanes": {
+      "$ref": "#/$defs/Lanes"
+    },
+    "components": {
+      "additionalProperties": {
+        "discriminator": {
+          "mapping": {
+            "adiabatic_humidifier": "#/$defs/AdiabaticHumidifier",
+            "cooling_coil_chw": {
+              "discriminator": {
+                "mapping": {
+                  "design": "#/$defs/CoolingCoilDesign",
+                  "measured": "#/$defs/CoolingCoilMeasured"
+                },
+                "propertyName": "mode"
+              },
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/CoolingCoilDesign"
+                },
+                {
+                  "$ref": "#/$defs/CoolingCoilMeasured"
+                }
+              ]
+            },
+            "desiccant_wheel": "#/$defs/DesiccantWheel",
+            "electric_heater": "#/$defs/ElectricHeater",
+            "energy_wheel": "#/$defs/EnergyWheel",
+            "fan": "#/$defs/Fan",
+            "filter": "#/$defs/Filter",
+            "heat_pipe": "#/$defs/SensibleHx",
+            "heating_coil_hw": "#/$defs/HeatingCoilHw",
+            "mixing_box": "#/$defs/MixingBox",
+            "plate_hx": "#/$defs/SensibleHx",
+            "runaround": "#/$defs/SensibleHx",
+            "space": "#/$defs/Space",
+            "steam_humidifier": "#/$defs/SteamHumidifier"
+          },
+          "propertyName": "type"
+        },
+        "oneOf": [
+          {
+            "$ref": "#/$defs/MixingBox"
+          },
+          {
+            "$ref": "#/$defs/Space"
+          },
+          {
+            "$ref": "#/$defs/SensibleHx"
+          },
+          {
+            "$ref": "#/$defs/DesiccantWheel"
+          },
+          {
+            "$ref": "#/$defs/SteamHumidifier"
+          },
+          {
+            "$ref": "#/$defs/AdiabaticHumidifier"
+          },
+          {
+            "discriminator": {
+              "mapping": {
+                "design": "#/$defs/CoolingCoilDesign",
+                "measured": "#/$defs/CoolingCoilMeasured"
+              },
+              "propertyName": "mode"
+            },
+            "oneOf": [
+              {
+                "$ref": "#/$defs/CoolingCoilDesign"
+              },
+              {
+                "$ref": "#/$defs/CoolingCoilMeasured"
+              }
+            ]
+          },
+          {
+            "$ref": "#/$defs/EnergyWheel"
+          },
+          {
+            "$ref": "#/$defs/Filter"
+          },
+          {
+            "$ref": "#/$defs/Fan"
+          },
+          {
+            "$ref": "#/$defs/HeatingCoilHw"
+          },
+          {
+            "$ref": "#/$defs/ElectricHeater"
+          }
+        ]
+      },
+      "title": "Components",
+      "type": "object"
+    },
+    "sensors": {
+      "items": {
+        "$ref": "#/$defs/Sensor"
+      },
+      "title": "Sensors",
+      "type": "array"
+    },
+    "sequence": {
+      "$ref": "#/$defs/Sequence"
+    },
+    "conditions": {
+      "$ref": "#/$defs/Conditions"
+    }
+  },
+  "required": [
+    "schema_version",
+    "unit",
+    "airflows",
+    "lanes",
+    "components",
+    "sensors",
+    "sequence",
+    "conditions"
+  ],
+  "title": "UnitConfig",
+  "type": "object"
+}

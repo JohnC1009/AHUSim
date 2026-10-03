@@ -87,3 +87,13 @@ def test_cooling_coil_max_face_velocity_optional():
     data["components"]["cc1"]["max_face_velocity"]["unit"] = "cfm"
     with pytest.raises(ValidationError):
         UnitConfig.model_validate(data)
+
+
+def test_committed_json_schema_is_current():
+    """web/src/types/unit-config.schema.json feeds the TypeScript types; it must
+    match the models. Regenerate: python -m ahuverify.schema > web/src/types/unit-config.schema.json
+    then cd web && npm run gen:types."""
+    committed = (
+        Path(__file__).parents[2] / "web" / "src" / "types" / "unit-config.schema.json"
+    )
+    assert json.loads(committed.read_text()) == export_json_schema()

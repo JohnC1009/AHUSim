@@ -5,6 +5,7 @@ from typing import Literal
 from ahuverify.analysis import scenario
 from ahuverify.chart import chart_grid
 from ahuverify.checks import static_checks
+from ahuverify.lanes import site_pressure
 from ahuverify.report import condition_report, failure_report
 from ahuverify.schema import OperatingCondition, UnitConfig, export_json_schema
 from fastapi import APIRouter, Depends, Query
@@ -36,6 +37,7 @@ class ChecksRequest(BaseModel):
 def solve_one(body: SolveRequest) -> dict:
     run = scenario(body.config, [body.condition])
     return {
+        "p": site_pressure(body.config.unit),
         "static": [failure_report(f) for f in run.static],
         "result": condition_report(run.conditions[0], body.units),
     }
@@ -45,6 +47,7 @@ def solve_one(body: SolveRequest) -> dict:
 def solve_scenario(body: ScenarioRequest) -> dict:
     run = scenario(body.config, body.conditions)
     return {
+        "p": site_pressure(body.config.unit),
         "static": [failure_report(f) for f in run.static],
         "results": [condition_report(c, body.units) for c in run.conditions],
     }

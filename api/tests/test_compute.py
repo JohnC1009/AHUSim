@@ -58,6 +58,7 @@ def test_scenario_runs_all_conditions(client, example_config):
     by_id = {x["condition_id"]: x for x in r.json()["results"]}
     assert by_id["summer_design"]["mode"] is None  # §6.1 has no occupied mode
     assert by_id["winter_warmup"]["mode"] == "warmup"
+    assert r.json()["p"] == pytest.approx(101204, abs=2)  # 33 ft standard atmosphere
 
 
 def test_checks(client, example_config):
