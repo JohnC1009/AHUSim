@@ -129,6 +129,8 @@ def from_check(component: str, component_type: str, check) -> Failure:
         msg = f"Fan {component} moves {_cfm(v)}, above its {_cfm(lim)} design airflow."
     elif name == "frost":
         msg = f"Exhaust air leaving {component} would be {_f(v)} and saturated, so {component} will frost."
+    elif name == "condensation":
+        msg = f"Air leaving {component} would be at {v * 100:.0f} % RH, beyond saturation, so water condenses in the wheel."
     elif name == "saturation":
         msg = f"Humidifier {component} is asked for more steam than the air can absorb, so the duct downstream would get wet."
     elif name == "rate":

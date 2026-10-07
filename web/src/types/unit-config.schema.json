@@ -496,6 +496,63 @@
           "minimum": 0.0,
           "title": "Eatr",
           "type": "number"
+        },
+        "oacf": {
+          "default": 1.0,
+          "maximum": 1.5,
+          "minimum": 0.8,
+          "title": "Oacf",
+          "type": "number"
+        },
+        "rated_airflow": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Airflow"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "airflow_ratings": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/WheelRating"
+          },
+          "title": "Airflow Ratings",
+          "type": "array"
+        },
+        "rated_speed_rpm": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Rated Speed Rpm"
+        },
+        "matrix_heat_capacity": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/HeatCapacity"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "latent_speed_exponent": {
+          "default": 1.0,
+          "maximum": 5.0,
+          "minimum": 1.0,
+          "title": "Latent Speed Exponent",
+          "type": "number"
         }
       },
       "required": [
@@ -595,6 +652,30 @@
         "dp_dirty"
       ],
       "title": "Filter",
+      "type": "object"
+    },
+    "HeatCapacity": {
+      "additionalProperties": false,
+      "properties": {
+        "value": {
+          "exclusiveMinimum": 0.0,
+          "title": "Value",
+          "type": "number"
+        },
+        "unit": {
+          "enum": [
+            "kJ/K",
+            "Btu/F"
+          ],
+          "title": "Unit",
+          "type": "string"
+        }
+      },
+      "required": [
+        "value",
+        "unit"
+      ],
+      "title": "HeatCapacity",
       "type": "object"
     },
     "HeatingCoilHw": {
@@ -1399,6 +1480,34 @@
         "unit"
       ],
       "title": "Velocity",
+      "type": "object"
+    },
+    "WheelRating": {
+      "additionalProperties": false,
+      "description": "Effectiveness at one airflow (balanced flow, rated speed), from a selection.",
+      "properties": {
+        "airflow": {
+          "$ref": "#/$defs/Airflow"
+        },
+        "eps_sens": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Eps Sens",
+          "type": "number"
+        },
+        "eps_lat": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Eps Lat",
+          "type": "number"
+        }
+      },
+      "required": [
+        "airflow",
+        "eps_sens",
+        "eps_lat"
+      ],
+      "title": "WheelRating",
       "type": "object"
     }
   },

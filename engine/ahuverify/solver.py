@@ -81,6 +81,19 @@ def _initial_flows(unit: CompiledUnit, oa: AirState, ra: AirState, acts) -> _Flo
     return _Flows(m_s, m_r, m_oa, m_ra, m_ra - (m_s - m_oa))
 
 
+def oa_intake_factor(unit: CompiledUnit) -> float:
+    """OA drawn at the intake per kg delivered past the OA path: the product of
+    the OACF of the wheels between OA and the mixing box (all supply-lane wheels
+    when there is none). A leaky wheel loses purge air to the exhaust, so the
+    intake must draw more than the damper receives (AHRI 1060)."""
+    factor = 1.0
+    for s in unit.supply[1:]:
+        if s.comp == unit.mixing_box:
+            break
+        factor *= getattr(unit.components[s.comp], "oacf", 1.0)
+    return factor
+
+
 def _segment_flow(
     slots: list[Slot], token: str, unit: CompiledUnit, before: float, after: float
 ) -> float:
@@ -143,7 +156,11 @@ class _Sweep:
             sup = self.cross_supply_in.get(slot.comp) or AirStream(
                 self.oa,
                 _segment_flow(
-                    u.supply, f"{slot.comp}.supply", u, flows.m_oa, flows.m_s
+                    u.supply,
+                    f"{slot.comp}.supply",
+                    u,
+                    flows.m_oa * oa_intake_factor(u),
+                    flows.m_s,
                 ),
             )
             exh = self.cross_exhaust_in.get(slot.comp) or AirStream(
@@ -205,7 +222,7 @@ def solve(
         for slot in unit.return_[1:]:
             cur = sweep.step(slot, cur, "return", flows, ra_state)
             states[_state_key(slot, "return", unit)] = cur
-        cur = AirStream(oa, flows.m_oa)
+        cur = AirStream(oa, flows.m_oa * oa_intake_factor(unit))
         states["oa_intake"] = cur
         for slot in unit.supply[1:]:
             cur = sweep.step(slot, cur, "supply", flows, ra_state)

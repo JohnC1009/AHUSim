@@ -24,6 +24,9 @@ class Exchange:
     condensate: float  # kg/s (both sides; frost on the exhaust side below 0 °C)
     exhaust_t_raw: float  # °C, exhaust leaving before any condensation
     frost: bool  # exhaust leaving below 0 °C and beyond saturation (spec §5.4)
+    # Highest leaving RH (before any condensing, 0–1+) of the sides at or above
+    # 0 °C; above 1 means water condenses in the exchanger.
+    max_rh_above_freezing: float = 0.0
 
 
 def exhaust_would_frost(t: float, w: float, p: float) -> bool:
@@ -58,10 +61,14 @@ def exchange(
     if bypass > 0.0:
         parts.append(AirStream(s, bypass * m_s))
     supply_out, cond_mix = mix_airstreams(parts, p)
+    rh_raw = [
+        w / si.GetSatHumRatio(t, p) for t, w in ((t_sw, w_sw), (t_eo, w_eo)) if t >= 0.0
+    ]
     return Exchange(
         supply_out=supply_out,
         exhaust_out=AirStream(eo_state, m_e),
         condensate=cond_s * m_w + cond_e * m_e + cond_mix,
         exhaust_t_raw=t_eo,
         frost=exhaust_would_frost(t_eo, w_eo, p),
+        max_rh_above_freezing=max(rh_raw, default=0.0),
     )

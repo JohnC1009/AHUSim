@@ -67,6 +67,9 @@ _TO_SI: dict[str, tuple[float, float]] = {
     "lb/h": (_KG_PER_LB / 3600.0, 0.0),
     # relative humidity / fraction -> 0–1
     "%": (0.01, 0.0),
+    # heat capacity -> kJ/K (1 Btu/°F = 1.05505585 kJ × 1.8 = 1.8991 kJ/K)
+    "kJ/K": (1.0, 0.0),
+    "Btu/F": (1.05505585262 * 1.8, 0.0),
     # display-only units (not accepted as input)
     "kg/kg": (1.0, 0.0),
     "gr/lb": (1.0 / 7000.0, 0.0),  # 7,000 grains per pound

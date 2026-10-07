@@ -47,3 +47,17 @@ describe("result views", () => {
     expect(processKeys(r, ["oa", "mix1", "cc1", "sf1"])).toEqual(["oa_intake", "after:mix1", "after:cc1", "after:sf1"]);
   });
 });
+
+describe("energy wheel form", () => {
+  it("adds and removes an airflow rating point", () => {
+    let value: Record<string, any> = { type: "energy_wheel", eps_sens: 0.75, eps_lat: 0.65, purge: true, eatr: 0.02 };
+    const node = componentDef({ type: "energy_wheel" })!;
+    const { rerender } = render(<ObjectFields node={node} value={value} onChange={(v) => (value = v)} />);
+    fireEvent.click(screen.getByRole("button", { name: "+ Add More airflow ratings" }));
+    expect(value.airflow_ratings).toEqual([{ airflow: { value: 0, unit: "cfm" }, eps_sens: 0, eps_lat: 0 }]);
+    rerender(<ObjectFields node={node} value={value} onChange={(v) => (value = v)} />);
+    fireEvent.click(screen.getByRole("button", { name: "Remove More airflow ratings 1" }));
+    expect(value.airflow_ratings).toEqual([]);
+    expect(screen.getByText("OACF (OA in / supply out)")).toBeTruthy();
+  });
+});

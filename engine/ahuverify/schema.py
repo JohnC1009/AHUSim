@@ -90,6 +90,11 @@ class RelHum(_Quantity):
     unit: Literal["%"]
 
 
+class HeatCapacity(_Quantity):
+    value: Annotated[float, Field(gt=0.0)]
+    unit: Literal["kJ/K", "Btu/F"]
+
+
 QUANTITY_TYPES = (
     Temperature,
     Enthalpy,
@@ -101,6 +106,7 @@ QUANTITY_TYPES = (
     Power,
     MassFlow,
     RelHum,
+    HeatCapacity,
 )
 
 
@@ -196,12 +202,49 @@ CoolingCoilChw = Annotated[
 ]
 
 
-class EnergyWheel(_Model):
-    type: Literal["energy_wheel"]
+class WheelRating(_Model):
+    """Effectiveness at one airflow (balanced flow, rated speed), from a selection."""
+
+    airflow: Airflow
     eps_sens: Fraction
     eps_lat: Fraction
+
+
+class EnergyWheel(_Model):
+    type: Literal["energy_wheel"]
+    eps_sens: Fraction  # at rated_airflow (or at every airflow if none given)
+    eps_lat: Fraction
     purge: bool
-    eatr: Annotated[float, Field(ge=0.0, le=0.05)]
+    eatr: Annotated[
+        float, Field(ge=0.0, le=0.05)
+    ]  # exhaust air transfer ratio (AHRI 1060)
+    # Outdoor air correction factor (AHRI 1060): OA in / supply out. Above 1 =
+    # OA lost to the exhaust through purge and seals.
+    oacf: Annotated[float, Field(ge=0.8, le=1.5)] = 1.0
+    # Effectiveness vs airflow (option 1): the rating above applies at
+    # rated_airflow; airflow_ratings add more points (e.g. AHRI 75 %).
+    rated_airflow: Airflow | None = None
+    airflow_ratings: list[WheelRating] = []
+    # Speed correction (option 2, Kays & London): both or neither.
+    rated_speed_rpm: Annotated[float, Field(gt=0.0)] | None = None
+    matrix_heat_capacity: HeatCapacity | None = None
+    latent_speed_exponent: Annotated[float, Field(ge=1.0, le=5.0)] = 1.0
+
+    @model_validator(mode="after")
+    def consistent_inputs(self) -> EnergyWheel:
+        if self.airflow_ratings and self.rated_airflow is None:
+            raise ValueError(
+                "airflow_ratings need rated_airflow (the airflow of eps_sens / eps_lat)."
+            )
+        if (self.rated_speed_rpm is None) != (self.matrix_heat_capacity is None):
+            raise ValueError(
+                "Give rated_speed_rpm and matrix_heat_capacity together, or neither."
+            )
+        if self.oacf < 1.0 - self.eatr:
+            raise ValueError(
+                f"OACF {self.oacf} with EATR {self.eatr} would need a negative purge flow; OACF must be at least 1 − EATR."
+            )
+        return self
 
 
 class Filter(_Model):

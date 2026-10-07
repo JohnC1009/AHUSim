@@ -46,6 +46,14 @@ export type EpsSens1 = number;
 export type EpsLat1 = number;
 export type Purge = boolean;
 export type Eatr = number;
+export type Oacf = number;
+export type EpsSens2 = number;
+export type EpsLat2 = number;
+export type AirflowRatings = WheelRating[];
+export type RatedSpeedRpm = number | null;
+export type Value11 = number;
+export type Unit11 = "kJ/K" | "Btu/F";
+export type LatentSpeedExponent = number;
 export type Type9 = "filter";
 export type Type10 = "fan";
 export type EtaFan = number;
@@ -72,9 +80,9 @@ export type Any = [AllOf | AnyOf | NotOf | Comparison, ...(AllOf | AnyOf | NotOf
 export type Not = AllOf | AnyOf | NotOf | Comparison;
 export type Var = "oa_db" | "oa_h" | "oa_dp" | "ra_db" | "ra_h" | "space_t" | "schedule";
 export type Op = "<" | "<=" | ">" | ">=" | "==";
-export type Value11 = string | Temperature | Enthalpy;
-export type Value12 = number;
-export type Unit11 = "Btu/lb" | "kJ/kg";
+export type Value12 = string | Temperature | Enthalpy;
+export type Value13 = number;
+export type Unit12 = "Btu/lb" | "kJ/kg";
 export type Loops = string[];
 export type Modes = Mode2[];
 export type Sensor1 = string;
@@ -269,6 +277,24 @@ export interface EnergyWheel {
   eps_lat: EpsLat1;
   purge: Purge;
   eatr: Eatr;
+  oacf?: Oacf;
+  rated_airflow?: Airflow | null;
+  airflow_ratings?: AirflowRatings;
+  rated_speed_rpm?: RatedSpeedRpm;
+  matrix_heat_capacity?: HeatCapacity | null;
+  latent_speed_exponent?: LatentSpeedExponent;
+}
+/**
+ * Effectiveness at one airflow (balanced flow, rated speed), from a selection.
+ */
+export interface WheelRating {
+  airflow: Airflow;
+  eps_sens: EpsSens2;
+  eps_lat: EpsLat2;
+}
+export interface HeatCapacity {
+  value: Value11;
+  unit: Unit11;
 }
 export interface Filter {
   type: Type9;
@@ -335,11 +361,11 @@ export interface NotOf {
 export interface Comparison {
   var: Var;
   op: Op;
-  value: Value11;
+  value: Value12;
 }
 export interface Enthalpy {
-  value: Value12;
-  unit: Unit11;
+  value: Value13;
+  unit: Unit12;
 }
 export interface Fixed {
   [k: string]: number;

@@ -58,7 +58,7 @@ from the spec text or need the owner's eye.
 | Electric heater | Modulating, or N equal stages: stage k on when output ≥ k/N. |
 | CHW coil, design | Spec ADP/BF model. ADP shifts with CHWS; the unit solve uses rated CHWS (no CHWS input in v1). Part valve: h and W both linear in valve (spec says enthalpy; W linear too is my assumption). Optional `max_face_velocity`. |
 | CHW coil, measured | Forced leaving db + RH; implied ADP/BF are NaN for a dry or non-cooling coil. |
-| Energy wheel | Speed scales ε linearly (spec assumption). Defaults: speed 1, bypass 0. EATR = equal-mass swap at the inlets (energy-conserving); purge has no separate effect (EATR is taken to include it). |
+| Energy wheel | **Superseded by 0007** (ε vs airflow and speed, AHRI 1060 leakage). Original: speed scales ε linearly (spec assumption). Defaults: speed 1, bypass 0. EATR = equal-mass swap at the inlets (energy-conserving); purge has no separate effect (EATR is taken to include it). |
 | Sensible HX | Plate / runaround / heat pipe share one model; optional face-velocity pair. |
 | Steam humidifier | Isothermal; capped at saturation (`saturation` check). Absorption-distance check is a static check (M2-5). |
 | Adiabatic humidifier | Constant h toward wet bulb; capped by max rate (`rate` check). |

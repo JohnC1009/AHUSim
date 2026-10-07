@@ -10,7 +10,7 @@ export const UNIT_LABEL: Record<string, string> = {
   F: "°F", C: "°C", ft2: "ft²", m2: "m²", in_wc: "in. w.c.", m3s: "m³/s", "m3/s": "m³/s", "m3/h": "m³/h",
   fpm: "fpm", "m/s": "m/s", cfm: "cfm", "L/s": "L/s", ft: "ft", m: "m", Pa: "Pa", "%": "%",
   "Btu/lb": "Btu/lb", "kJ/kg": "kJ/kg", kW: "kW", W: "W", MBH: "MBH", "Btu/h": "Btu/h",
-  "lb/h": "lb/h", "kg/h": "kg/h", "kg/s": "kg/s",
+  "lb/h": "lb/h", "kg/h": "kg/h", "kg/s": "kg/s", "Btu/F": "Btu/°F", "kJ/K": "kJ/K",
 };
 
 const KEY_LABEL: Record<string, string> = {
@@ -19,6 +19,10 @@ const KEY_LABEL: Record<string, string> = {
   oa: "Outdoor-air damper", ra: "Return damper", relief: "Relief damper", min_oa: "Minimum OA",
   pressurization_bias: "Pressurization bias", pressure_override: "Pressure override",
   motor_in_airstream: "Motor in airstream", max_face_velocity: "Max face velocity", regen_heat: "Regeneration heat",
+  oacf: "OACF (OA in / supply out)", rated_airflow: "Rated airflow", airflow_ratings: "More airflow ratings",
+  rated_speed_rpm: "Rated speed (rpm)", matrix_heat_capacity: "Matrix heat capacity",
+  latent_speed_exponent: "Latent speed exponent",
+  m_carryover: "Carryover", m_purge: "Purge / seals",
 };
 const UPPER = new Set(["eat", "lat", "ewt", "lwt", "chws", "chwr", "oa", "ra", "rh", "ft"]);
 
@@ -148,7 +152,29 @@ export function Field(props: { node: Node; value: any; onChange: (v: any) => voi
     return <NumberInput label={props.name} value={props.value ?? 0} onChange={props.onChange} />;
   }
   if (n.type === "object" && n.properties) return <ObjectFields node={n} value={props.value ?? {}} onChange={props.onChange} name={props.name} />;
+  if (n.type === "array" && n.items) return <ListField {...props} />;
   return <input aria-label={props.name} value={props.value ?? ""} onChange={(e) => props.onChange(e.target.value)} />;
+}
+
+/** A list of items (e.g. extra wheel rating points): edit, add, remove. */
+function ListField(props: { node: Node; value: any; onChange: (v: any) => void; name: string }) {
+  const n = resolve(props.node);
+  const items: any[] = props.value ?? [];
+  return (
+    <div className="form-grid">
+      {items.map((item, i) => (
+        <div key={i} className="card form-grid">
+          <Field node={n.items} name={`${props.name} ${i + 1}`} value={item} onChange={(v) => props.onChange(items.map((x, j) => (j === i ? v : x)))} />
+          <button className="btn" aria-label={`Remove ${props.name} ${i + 1}`} onClick={() => props.onChange(items.filter((_, j) => j !== i))}>
+            Remove
+          </button>
+        </div>
+      ))}
+      <button className="btn" aria-label={`+ Add ${props.name}`} onClick={() => props.onChange([...items, defaultFor(n.items)])}>
+        + Add
+      </button>
+    </div>
+  );
 }
 
 export function ObjectFields(props: { node: Node; value: any; onChange: (v: any) => void; name?: string; skip?: string[] }) {
@@ -158,7 +184,7 @@ export function ObjectFields(props: { node: Node; value: any; onChange: (v: any)
     <div className="form-grid">
       {keys.map((k) => {
         const child = resolve(n.properties[k]);
-        const nested = child.type === "object" && child.properties && !isQuantity(child);
+        const nested = (child.type === "object" && child.properties && !isQuantity(child)) || child.type === "array";
         const field = (
           <Field
             node={n.properties[k]}

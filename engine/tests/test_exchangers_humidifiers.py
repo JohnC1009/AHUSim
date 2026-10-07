@@ -85,8 +85,14 @@ def test_wheel_speed_and_bypass():
 def test_wheel_eatr_carries_exhaust_air_into_supply():
     clean = wheel().solve(cross_inlets(SUMMER_OA, SUMMER_RA, 4.0, 4.0), {}, P)
     dirty = wheel(eatr=0.05).solve(cross_inlets(SUMMER_OA, SUMMER_RA, 4.0, 4.0), {}, P)
-    assert dirty.outlets["supply_out"].m_da == pytest.approx(4.0)  # equal-mass swap
-    assert dirty.outlets["supply_out"].state.w > clean.outlets["supply_out"].state.w
+    # OACF 1 (default): supply out = OA in; the carryover is return air, which in
+    # summer is drier than the wheel's leaving supply, so supply moves toward RA.
+    assert dirty.outlets["supply_out"].m_da == pytest.approx(4.0)
+    assert (
+        SUMMER_RA.w
+        < dirty.outlets["supply_out"].state.w
+        < clean.outlets["supply_out"].state.w
+    )
     assert closes(dirty)
 
 

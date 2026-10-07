@@ -82,7 +82,7 @@ def _load_unit(name: str) -> str:
         return "W"
     if name in ("adp", "chwr_implied"):
         return "C"
-    if name in ("shr", "bf"):
+    if name in ("shr", "bf", "eps_sens", "eps_lat"):
         return "-"
     return "kg/s"  # flows of air or water
 
